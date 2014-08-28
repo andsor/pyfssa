@@ -7,6 +7,9 @@ transitions.
 Developing
 ----------
 
+Deployment and Packaging
+~~~~~~~~~~~~~~~~~~~~~~~~
+
 This project uses `setuptools`_.
 The `Development Mode`_ deploys the project locally without copying any files.
 Run
@@ -20,6 +23,28 @@ in the working directory root of the repository.
 .. _setuptools: https://pypi.python.org/pypi/setuptools/
 
 .. _Development Mode: http://pythonhosted.org//setuptools/setuptools.html#development-mode
+
+Building the documentation
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This project uses `sphinx`_ and `sphinx_rtd_theme`_.
+To build the documentation, run
+
+.. code:: bash
+
+   cd docs; make html
+
+in the working directory of the repository, or run
+
+.. code:: bash
+   
+   cd docs; make
+
+to list other output formats.
+
+
+.. _sphinx: http://sphinx-doc.org
+.. _sphinx_rtd_theme: http://pypi.python.org/pypi/sphinx_rtd_theme
 
 License
 -------
