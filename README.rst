@@ -30,6 +30,7 @@ Testing
 Run
 
 .. code:: bash
+
    python setup.py test
 
 to `build the package and run the tests
