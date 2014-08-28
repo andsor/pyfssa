@@ -34,7 +34,7 @@ Run
    python setup.py test
 
 to `build the package and run the tests
-`http://pythonhosted.org/setuptools/setuptools.html#test-build-package-and-run-a-unittest-suite>`_.
+<http://pythonhosted.org/setuptools/setuptools.html#test-build-package-and-run-a-unittest-suite>`_.
 
 Building the documentation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
