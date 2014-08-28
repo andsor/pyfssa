@@ -4,6 +4,16 @@ pyfss
 pyfss is a scientific Python package for finite-size scaling analysis at phase
 transitions.
 
+Python 2/3 compatibility
+------------------------
+
+This project uses `python-future`_.
+It is written in standard Python 3 code, with `python-future`_ providing
+support for running the code on Python 2.7 `mostly unchanged
+<http://python-future.org/compatible_idioms.html>`_.
+
+.. _python-future: http://python-future.org
+
 Developing
 ----------
 
