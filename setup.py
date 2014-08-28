@@ -53,4 +53,5 @@ setup(
     extras_require={
         'doc': ["sphinx>=1.2.2", "sphinx_rtd_theme>=0.1.6"],
     },
+    test_suite="tests"
 )
