@@ -1,10 +1,28 @@
 pyfss
 =====
 
-pyfss is a scientific Python package for finite-size scaling analysis.
+pyfss is a scientific Python package for finite-size scaling analysis at phase
+transitions.
+
+Developing
+----------
+
+This project uses `setuptools`_.]
+The `Development Mode`_ deploys the project locally without copying any files.
+Run
+
+.. code:: bash
+
+           python setup.py develop
+
+in the working directory root of the repository.
+
+.. _setuptools: https://pypi.python.org/pypi/setuptools/
+
+.. _Development Mode: http://pythonhosted.org//setuptools/setuptools.html#development-mode
 
 License
-=======
+-------
 
 .. image:: http://gnu.org/graphics/gplv3-88x31.png
    :target: http://gnu.org/licenses/gpl.html
