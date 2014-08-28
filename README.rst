@@ -36,6 +36,15 @@ Run
 to `build the package and run the tests
 <http://pythonhosted.org/setuptools/setuptools.html#test-build-package-and-run-a-unittest-suite>`_.
 
+For automatic test runs upon file changes run
+
+.. code:: bash
+
+   ./autotest.sh
+
+from the working directory of the repository.
+
+
 Building the documentation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
