@@ -34,7 +34,10 @@ setup(
     ],
     keywords='',
     packages=find_packages(exclude=['docs', 'tests*']),
-    install_requires=['numpy>=1.8.2'],
+    install_requires=[
+        'numpy>=1.8',
+        'future>=0.13'
+    ],
     include_package_data=True,  # include everything in source control
 
     # but exclude these files
