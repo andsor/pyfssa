@@ -7,7 +7,7 @@ transitions.
 Developing
 ----------
 
-This project uses `setuptools`_.]
+This project uses `setuptools`_.
 The `Development Mode`_ deploys the project locally without copying any files.
 Run
 
