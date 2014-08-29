@@ -54,7 +54,12 @@ setup(
 
     setup_requires=['setuptools_git >= 1.1', ],
     extras_require={
-        'doc': ["sphinx>=1.2.2", "sphinx_rtd_theme>=0.1.6"],
+        'doc': [
+            "sphinx>=1.2.2",
+            "sphinx_rtd_theme>=0.1.6",
+            "sphinxcontrib-bibtex>=0.3.1",
+            "numpydoc>=0.5",
+        ],
     },
     test_suite="tests"
 )

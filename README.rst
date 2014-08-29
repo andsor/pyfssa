@@ -17,10 +17,12 @@ support for running the code on Python 2.7 `mostly unchanged
 Building the documentation
 --------------------------
 
-This project uses `sphinx`_, `sphinx_rtd_theme`_, and `sphinxcontrib-bibtex`_.
+This project uses `sphinx`_, `sphinx_rtd_theme`_, `sphinxcontrib-bibtex`_ and
+`numpydoc`_.
 A `CiteULike group`_ manages the bibliography.
 We configure a `custom style`_ in `docs/conf.py <docs/conf.py>`_ which
 suppresses URLs in the bibliography output.
+We employ the `numpy docstring conventions`_.
 
 To update the local bibliography, run
 
@@ -58,6 +60,8 @@ in the working directory of the repository.
 .. _sphinxcontrib-bibtex: http://pypi.python.org/pypi/sphinxcontrib-bibtex/
 .. _CiteULike group: http://www.citeulike.org/group/19073
 .. _custom style: http://sphinxcontrib-bibtex.readthedocs.org/en/latest/usage.html#custom-formatting-sorting-and-labelling
+.. _numpydoc: http://pypi.python.org/pypi/numpydoc
+.. _numpy docstring conventions: http://github.com/numpy/numpy/blob/master/doc/HOWTO_DOCUMENT.rst.txt
 
 Developing
 ----------

@@ -31,6 +31,8 @@ import os
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
+    'numpydoc',
+    'sphinx.ext.autosummary',
     'sphinx.ext.doctest',
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
@@ -40,6 +42,9 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinxcontrib.bibtex',
 ]
+
+# http://stackoverflow.com/a/21665947
+autosummary_generate = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

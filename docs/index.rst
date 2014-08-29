@@ -16,6 +16,7 @@ Contents:
 
    readme
    fss-theory
+   reference
    license
    zbib
 
