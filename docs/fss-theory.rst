@@ -72,6 +72,8 @@ with
    \quad (L \gg \xi).
    \end{cases}
 
+.. _data-collapse-method:
+
 The data collapse method
 ------------------------
 

@@ -1,39 +1,120 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+"""
+Routines for finite-size scaling analyses
+
+The **fss** package provides routines to perform finite-size scaling analyses on
+experimental data [1]_ [2]_.
+
+Routines
+--------
+
+.. autosummary::
+   :nosignatures:
+
+   scaledata
+
+Classes
+-------
+
+.. autosummary::
+
+   ScaledData
+
+References
+----------
+
+.. [1] M. E. J. Newman and G. T. Barkema, Monte Carlo Methods in Statistical
+   Physics* (Oxford University Press, 1999)
+
+.. [2] K. Binder and D. W. Heermann, `Monte Carlo Simulation in Statistical
+   Physics <http://dx.doi.org/10.1007/978-3-642-03163-2>`_ (Springer, Berlin,
+   Heidelberg, 2010)
+
+"""
+
 # Python 2/3 compatibility
 from __future__ import (absolute_import, division,
                         print_function, unicode_literals)
 from future.builtins import *
 
 import numpy as np
-
 from collections import namedtuple
 
-ScaledData = namedtuple('ScaledData', ['x', 'y', 'dy'])
+
+class ScaledData(namedtuple('ScaledData', ['x', 'y', 'dy'])):
+    """
+    A :py:func:`namedtuple <collections.namedtuple>` for :py:func:`scaledata` output
+    """
+
+    # set this to keep memory requirements low, according to
+    # http://docs.python.org/3/library/collections.html#namedtuple-factory-function-for-tuples-with-named-fields
+    __slots__ = ()
+
 
 def scaledata(l, rho, a, da, rho_c, nu, zeta):
-    """TODO: Docstring for scaledata.
+    r'''
+    Scale experimental data according to critical exponents
 
     Parameters
     ----------
-    :l: 1-D array_like
+    l, rho : 1-D array_like
+       finite system sizes `l` and parameter values `rho`
 
-    :rho: 1-D array_like
+    a, da : 2-D array_like of shape (`l`.size, `rho`.size)
+       experimental data `a` with standard errors `da` obtained at finite system
+       sizes `l` and parameter values `rho`, with
+       ``a.shape == da.shape == (l.size, rho.size)``
 
-    :a: 2-D array_like of shape (l.size, rho.size)
+    rho_c : float in range [rho.min(), rho.max()]
+       (assumed) critical parameter value with ``rho_c >= rho.min() and rho_c <=
+       rho.max()``
 
-    :da: 2-D array_like of shape (l.size, rho.size)
+    nu, zeta : float
+       (assumed) critical exponents
 
-    :rho_c: float in range [rho.min(), rho.max()]
+    Returns
+    -------
+    :py:class:`ScaledData`
+       scaled data `x`, `y` with standard errors `dy`
 
-    :nu: float
+    x, y, dy : ndarray
+       two-dimensional arrays of shape ``(l.size, rho.size)``
 
-    :zeta: float
+    Notes
+    -----
+    Scale data points :math:`(\varrho_j, a_{ij}, da_{ij})` observed at finite
+    system sizes :math:`L_i` and parameter values :math:`\varrho_i` according to
+    the finite-size scaling ansatz
 
-    :returns: TODO
+    .. math::
 
-    """
+       L^{-\zeta/\nu} a_{ij} = \tilde{f}\left( L^{1/\nu} (\varrho_j - \varrho_c)
+       \right).
+
+    The output is the scaled data points :math:`(x_{ij}, y_{ij}, dy_{ij})` with
+
+    .. math::
+
+       x_{ij} & = L_i^{1/\nu} (\varrho_j - \varrho_c) \\
+       y_{ij} & = L_i^{-\zeta/\nu} a_{ij} \\
+       dy_{ij} & = L_i^{-\zeta/\nu} da_{ij}
+
+    such that all data points :ref:`collapse <data-collapse-method>` onto the
+    single curve :math:`\tilde{f}(x)` with the right choice of :math:`\varrho_c,
+    \nu, \zeta` [1]_ [2]_.
+
+    References
+    ----------
+
+    .. [1] M. E. J. Newman and G. T. Barkema, Monte Carlo Methods in Statistical
+       Physics* (Oxford University Press, 1999)
+
+    .. [2] K. Binder and D. W. Heermann, `Monte Carlo Simulation in Statistical
+       Physics <http://dx.doi.org/10.1007/978-3-642-03163-2>`_ (Springer,
+       Berlin, Heidelberg, 2010)
+    '''
 
     # l should be 1-D array_like
     l = np.asanyarray(l)
