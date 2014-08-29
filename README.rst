@@ -95,6 +95,14 @@ in the working directory of the repository, or run
 
 to list other output formats.
 
+To automatically build the documentation, run
+
+.. code:: bash
+
+   cd docs; ./automake.sh
+
+in the working directory of the repository.
+
 
 .. _sphinx: http://sphinx-doc.org
 .. _sphinx_rtd_theme: http://pypi.python.org/pypi/sphinx_rtd_theme
