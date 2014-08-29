@@ -46,6 +46,14 @@ Run
 to `build the package and run the tests
 <http://pythonhosted.org/setuptools/setuptools.html#test-build-package-and-run-a-unittest-suite>`_.
 
+Run
+
+.. code:: bash
+   
+   python -m unittest discover
+
+from the working directory root of the repository to run the tests.
+
 For automatic test runs upon file changes run
 
 .. code:: bash
