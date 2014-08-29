@@ -19,6 +19,9 @@ Building the documentation
 
 This project uses `sphinx`_, `sphinx_rtd_theme`_, and `sphinxcontrib-bibtex`_.
 A `CiteULike group`_ manages the bibliography.
+We configure a `custom style`_ in `docs/conf.py`_ which suppresses URLs in the
+bibliography output.
+
 To update the local bibliography, run
 
 .. code:: bash
@@ -54,6 +57,7 @@ in the working directory of the repository.
 .. _sphinx_rtd_theme: http://pypi.python.org/pypi/sphinx_rtd_theme
 .. _sphinxcontrib-bibtex: http://pypi.python.org/pypi/sphinxcontrib-bibtex/
 .. _CiteULike group: http://www.citeulike.org/group/19073
+.. _custom style: http://sphinxcontrib-bibtex.readthedocs.org/en/latest/usage.html#custom-formatting-sorting-and-labelling
 
 Developing
 ----------
