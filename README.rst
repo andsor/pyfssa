@@ -37,6 +37,10 @@ in the working directory root of the repository.
 Testing
 ~~~~~~~
 
+This project uses `unittest`_.
+
+.. _unittest: http://docs.python.org/3/library/unittest.html
+
 Run
 
 .. code:: bash
@@ -52,7 +56,8 @@ Run
    
    python -m unittest discover
 
-from the working directory root of the repository to run the tests.
+from the working directory root of the repository to `discover and run the
+tests <http://docs.python.org/3.4/library/unittest.html#test-discovery>`_.
 
 For automatic test runs upon file changes run
 
