@@ -19,8 +19,8 @@ Building the documentation
 
 This project uses `sphinx`_, `sphinx_rtd_theme`_, and `sphinxcontrib-bibtex`_.
 A `CiteULike group`_ manages the bibliography.
-We configure a `custom style`_ in `docs/conf.py <docs/conf.py>`_ which suppresses URLs in the
-bibliography output.
+We configure a `custom style`_ in `docs/conf.py <docs/conf.py>`_ which
+suppresses URLs in the bibliography output.
 
 To update the local bibliography, run
 
