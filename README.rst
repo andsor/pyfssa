@@ -71,7 +71,16 @@ from the working directory of the repository.
 Building the documentation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This project uses `sphinx`_ and `sphinx_rtd_theme`_.
+This project uses `sphinx`_, `sphinx_rtd_theme`_, and `sphinxcontrib-bibtex`_.
+A `CiteULike group`_ manages the bibliography.
+To update the local bibliography, run
+
+.. code:: bash
+
+   cd docs; make bib
+
+in the working directory of the repository.
+
 To build the documentation, run
 
 .. code:: bash
@@ -89,6 +98,8 @@ to list other output formats.
 
 .. _sphinx: http://sphinx-doc.org
 .. _sphinx_rtd_theme: http://pypi.python.org/pypi/sphinx_rtd_theme
+.. _sphinxcontrib-bibtex: http://pypi.python.org/pypi/sphinxcontrib-bibtex/
+.. _CiteULike group: http://www.citeulike.org/group/19073
 
 License
 -------

@@ -6,10 +6,15 @@
 Welcome to pyfss's documentation!
 =================================
 
+:Release: |release|
+:Date:    |today|
+
 Contents:
 
 .. toctree::
    :maxdepth: 2
+
+   zbib
 
 
 

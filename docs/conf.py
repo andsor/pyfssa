@@ -38,6 +38,7 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
+    'sphinxcontrib.bibtex',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -282,3 +283,22 @@ texinfo_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'http://docs.python.org/': None}
+
+# custom style for sphinxcontrib-bibtex
+# http://sphinxcontrib-bibtex.readthedocs.org/en/latest/usage.html#custom-formatting-sorting-and-labelling
+
+from pybtex.style.formatting.alpha import Style as AlphaStyle
+from pybtex.style.template import optional, sentence
+from pybtex.plugin import register_plugin
+
+class NoURLStyle(AlphaStyle):
+
+    def format_web_refs(self, e):
+        # based on urlbst output.web.refs
+        return sentence(capfirst=False) [
+            optional [ self.format_eprint(e) ],
+            optional [ self.format_pubmed(e) ],
+            optional [ self.format_doi(e) ],
+            ]
+
+register_plugin('pybtex.style.formatting', 'alpha-nourls', NoURLStyle)
