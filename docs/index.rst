@@ -14,9 +14,9 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   readme
+   license
    zbib
-
-
 
 Indices and tables
 ==================

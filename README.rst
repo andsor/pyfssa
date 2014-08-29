@@ -14,6 +14,47 @@ support for running the code on Python 2.7 `mostly unchanged
 
 .. _python-future: http://python-future.org
 
+Building the documentation
+--------------------------
+
+This project uses `sphinx`_, `sphinx_rtd_theme`_, and `sphinxcontrib-bibtex`_.
+A `CiteULike group`_ manages the bibliography.
+To update the local bibliography, run
+
+.. code:: bash
+
+   cd docs; make bib
+
+in the working directory of the repository.
+
+To build the documentation, run
+
+.. code:: bash
+
+   cd docs; make html
+
+in the working directory of the repository, or run
+
+.. code:: bash
+   
+   cd docs; make
+
+to list other output formats.
+
+To automatically build the documentation, run
+
+.. code:: bash
+
+   cd docs; ./automake.sh
+
+in the working directory of the repository.
+
+
+.. _sphinx: http://sphinx-doc.org
+.. _sphinx_rtd_theme: http://pypi.python.org/pypi/sphinx_rtd_theme
+.. _sphinxcontrib-bibtex: http://pypi.python.org/pypi/sphinxcontrib-bibtex/
+.. _CiteULike group: http://www.citeulike.org/group/19073
+
 Developing
 ----------
 
@@ -68,49 +109,12 @@ For automatic test runs upon file changes run
 from the working directory of the repository.
 
 
-Building the documentation
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-This project uses `sphinx`_, `sphinx_rtd_theme`_, and `sphinxcontrib-bibtex`_.
-A `CiteULike group`_ manages the bibliography.
-To update the local bibliography, run
-
-.. code:: bash
-
-   cd docs; make bib
-
-in the working directory of the repository.
-
-To build the documentation, run
-
-.. code:: bash
-
-   cd docs; make html
-
-in the working directory of the repository, or run
-
-.. code:: bash
-   
-   cd docs; make
-
-to list other output formats.
-
-To automatically build the documentation, run
-
-.. code:: bash
-
-   cd docs; ./automake.sh
-
-in the working directory of the repository.
-
-
-.. _sphinx: http://sphinx-doc.org
-.. _sphinx_rtd_theme: http://pypi.python.org/pypi/sphinx_rtd_theme
-.. _sphinxcontrib-bibtex: http://pypi.python.org/pypi/sphinxcontrib-bibtex/
-.. _CiteULike group: http://www.citeulike.org/group/19073
+.. license-before-anchor
 
 License
 -------
+
+.. license-after-anchor
 
 .. image:: http://gnu.org/graphics/gplv3-88x31.png
    :target: http://gnu.org/licenses/gpl.html
