@@ -15,6 +15,7 @@ Contents:
    :maxdepth: 2
 
    readme
+   fss-theory
    license
    zbib
 
