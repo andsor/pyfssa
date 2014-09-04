@@ -266,6 +266,126 @@ class TestScaleData(unittest.TestCase):
         self.assertRaises(ValueError, callable, **args)
 
 
+class TestJPrimes(unittest.TestCase):
+    """
+    Test the j_primes helper function
+    """
+
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+    def test_existence(self):
+        """
+        Test for function existence
+        """
+        self.assertTrue(
+            hasattr(fss.fss, '_jprimes'),
+            msg='No such function: fss.fss._jprimes'
+        )
+
+    def test_signature(self):
+        """
+        Test function signature
+        """
+        try:
+            args = inspect.signature(fss.fss._jprimes).parameters
+        except:
+            args = inspect.getargspec(fss.fss._jprimes).args
+
+        fields = ['x', 'i']
+
+        for field in fields:
+            try:  # python 3
+                with self.subTest(i=field):
+                    self.assertIn(field, args)
+            except AttributeError:  # python 2
+                self.assertIn(field, args)
+
+    def test_return_type(self):
+        """
+        Test that the function returns an array of the same shape as x
+        """
+        x = np.sort(np.random.rand(4, 3))
+        ret = fss.fss._jprimes(x, 2)
+        self.assertTupleEqual(ret.shape, x.shape)
+
+    def test_never_select_from_i(self):
+        """
+        Test that the mask never selects from the i row
+        """
+        x = np.sort(np.random.rand(4, 3))
+        ret = fss.fss._jprimes(x, 2)
+        self.assertTrue(np.isnan(ret[2, :]).all())
+
+    def test_jprime_nan_if_xij_doesnt_fit(self):
+        """
+        Test that there is no j' if and only if the xij does not fit into
+        the i' row of x values
+        """
+        x = np.sort(np.random.rand(4, 3))
+
+        # degenerate the i row
+        x[3, :] = x[2, :]
+
+        ret = fss.fss._jprimes(x, 2)
+
+        for iprime in range(x.shape[0]):
+            if iprime == 2: continue
+            for j in range(x.shape[1]):
+                xij = x[2, j]
+                jprime = ret[iprime, j]
+                self.assertTrue(
+                    np.isnan(jprime) ==
+                    (
+                        xij < x[iprime, :].min()
+                        or xij >= x[iprime, :].max()
+                    )
+                )
+
+    def test_xiprimejprime_lessequal_xij(self):
+        """
+        Test that :math:`x_{i'j'} \leq x_{ij}`
+        """
+        x = np.sort(np.random.rand(4, 3))
+
+        # degenerate the i row
+        x[3, :] = x[2, :]
+
+        ret = fss.fss._jprimes(x, 2)
+
+        for iprime in range(x.shape[0]):
+            if iprime == 2: continue
+            for j in range(x.shape[1]):
+                xij = x[2, j]
+                jprime = ret[iprime, j]
+                if np.isnan(jprime): continue
+                jprime = int(jprime)
+                self.assertLessEqual(x[iprime, jprime], xij)
+
+    def test_xiprimejprime1_greater_xij(self):
+        """
+        Test that :math:`x_{i'(j'+1)} > x_{ij}`
+        """
+        x = np.sort(np.random.rand(4, 3))
+
+        # degenerate the i row
+        x[3, :] = x[2, :]
+
+        ret = fss.fss._jprimes(x, 2)
+
+        for iprime in range(x.shape[0]):
+            if iprime == 2: continue
+            for j in range(x.shape[1]):
+                xij = x[2, j]
+                jprime = ret[iprime, j]
+                if np.isnan(jprime): continue
+                jprime = int(jprime)
+                self.assertGreater(x[iprime, jprime + 1], xij)
+
+
 class TestWLSPredict(unittest.TestCase):
     """
     Test the Weighted Least Squares Prediction Function

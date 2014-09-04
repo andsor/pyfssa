@@ -234,6 +234,50 @@ def _wls_linearfit_predict(x, w, wx, wy, wxx, wxy, select):
 
     return y, dy2
 
+def _jprimes(x, i):
+    """
+    Helper function to return the j' indices for the master curve fit
+
+    This function is a helper function for :py:func:`quality`. It is not
+    supposed to be called directly.
+
+    Parameters
+    ----------
+    x : 2-D ndarray
+        The x values
+
+    i : int
+        The column index (finite size index)
+
+    Returns
+    -------
+    2-D ndarray of floats
+        Has the same shape as `x`. Its element with index (i', j) is the j'
+        such that :math:`x_{i'j'} \leq x_{ij} < x_{i'(j'+1)}`. If no such j'
+        exists, the element is np.nan. Convert the element to int to use as
+        an index.
+    """
+    ret = np.zeros_like(x)
+    ret[:] = np.nan
+    j_primes = - np.ones_like(x)
+
+    k, n = x.shape
+    for i_prime in range(k):
+        if i_prime == i: continue
+
+        j_primes[i_prime, :] = (
+            np.searchsorted(
+                x[i_prime, :], x[i, :], side='right'
+            ) - 1
+        )
+
+    # boolean mask for valid values of j'
+    j_primes_mask = np.logical_and(j_primes >= 0, j_primes < n - 1)
+
+    ret[j_primes_mask] = j_primes[j_primes_mask]
+
+    return ret
+
 def quality(x, y, dy):
 
     # arguments should be 2-D array_like
@@ -273,23 +317,7 @@ def quality(x, y, dy):
 
     for i in range(k):
 
-        # initialize j' to -1 (which is invalid value)
-        j_primes = - np.ones_like(x, dtype=int)
-
-        for i_prime in range(k):
-            if i_prime == i:
-                continue
-
-            # for each j determine the pairs x_i'j', x_i'(j'+1) that enclose
-            # the value x_ij
-            j_primes[i_prime, :] = (
-                np.searchsorted(
-                    x[i_prime, :], x[i, :], side='right'
-                ) - 1
-            )
-
-        # boolean mask for valid values of j'
-        j_primes_mask = np.logical_and(j_primes >= 0, j_primes < n - 1)
+        j_primes = _jprimes(x, i)
 
         for j in range(n):
 
