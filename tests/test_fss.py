@@ -14,10 +14,10 @@ class TestScaleData(unittest.TestCase):
 
     def setUp(self):
         rho = np.linspace(-1, 1, num=11)
-        l   = np.logspace(1, 3, num=3)
+        l = np.logspace(1, 3, num=3)
         l_mesh, rho_mesh = np.meshgrid(l, rho, indexing='ij')
-        a   = 1. / (1. + np.exp(- np.log10(l_mesh) * rho_mesh))
-        da  = np.ones_like(a) * 1e-2
+        a = 1. / (1. + np.exp(- np.log10(l_mesh) * rho_mesh))
+        da = np.ones_like(a) * 1e-2
 
         self.default_params = {
             'rho':   rho,
@@ -333,7 +333,8 @@ class TestJPrimes(unittest.TestCase):
         ret = fss.fss._jprimes(x, 2)
 
         for iprime in range(x.shape[0]):
-            if iprime == 2: continue
+            if iprime == 2:
+                continue
             for j in range(x.shape[1]):
                 xij = x[2, j]
                 jprime = ret[iprime, j]
@@ -357,11 +358,13 @@ class TestJPrimes(unittest.TestCase):
         ret = fss.fss._jprimes(x, 2)
 
         for iprime in range(x.shape[0]):
-            if iprime == 2: continue
+            if iprime == 2:
+                continue
             for j in range(x.shape[1]):
                 xij = x[2, j]
                 jprime = ret[iprime, j]
-                if np.isnan(jprime): continue
+                if np.isnan(jprime):
+                    continue
                 jprime = int(jprime)
                 self.assertLessEqual(x[iprime, jprime], xij)
 
@@ -377,13 +380,88 @@ class TestJPrimes(unittest.TestCase):
         ret = fss.fss._jprimes(x, 2)
 
         for iprime in range(x.shape[0]):
-            if iprime == 2: continue
+            if iprime == 2:
+                continue
             for j in range(x.shape[1]):
                 xij = x[2, j]
                 jprime = ret[iprime, j]
-                if np.isnan(jprime): continue
+                if np.isnan(jprime):
+                    continue
                 jprime = int(jprime)
                 self.assertGreater(x[iprime, jprime + 1], xij)
+
+
+class TestSelectMask(unittest.TestCase):
+    """
+    Test the select mask helper function
+    """
+
+    def setUp(self):
+        self.i = 1
+        self.j = 2
+        self.j_primes = np.asfarray(np.random.randint(-1, 2, size=(4, 3)))
+        self.j_primes[self.j_primes == -1] = np.nan
+        self.default_args = {
+            'j': self.j,
+            'j_primes': self.j_primes,
+        }
+
+    def tearDown(self):
+        pass
+
+    def test_existence(self):
+        """
+        Test for function existence
+        """
+        self.assertTrue(
+            hasattr(fss.fss, '_select_mask'),
+            msg='No such function: fss.fss._select_mask'
+        )
+
+    def test_signature(self):
+        """
+        Test function signature
+        """
+        try:
+            args = inspect.signature(fss.fss._select_mask).parameters
+        except:
+            args = inspect.getargspec(fss.fss._select_mask).args
+
+        fields = ['j', 'j_primes']
+
+        for field in fields:
+            try:  # python 3
+                with self.subTest(i=field):
+                    self.assertIn(field, args)
+            except AttributeError:  # python 2
+                self.assertIn(field, args)
+
+    def test_return_type(self):
+        """
+        Test that the function returns an array of the same shape as
+        j_primes
+        """
+        ret = fss.fss._select_mask(**self.default_args)
+        self.assertTupleEqual(
+            ret.shape, self.default_args['j_primes'].shape
+        )
+
+    def test_jprime_selection(self):
+        """
+        Test that the function selects element (i', j') if and only if
+        j_primes[i', j] == j' or j_primes[i', j] == j' - 1
+        """
+        ret = fss.fss._select_mask(**self.default_args)
+        for iprime in range(self.j_primes.shape[0]):
+            for jprime in range(self.j_primes.shape[1]):
+                self.assertTrue(
+                    ret[iprime, jprime] ==
+                    (
+                        (self.j_primes[iprime, self.j] == jprime)
+                        or
+                        (self.j_primes[iprime, self.j] == jprime - 1)
+                    )
+                )
 
 
 class TestWLSPredict(unittest.TestCase):
@@ -451,8 +529,7 @@ class TestWLSPredict(unittest.TestCase):
         y = float(ret[0])
         dy = float(ret[1])
         y, dy = fss.fss._wls_linearfit_predict(**self.default_args)
-        yfloat = float(y)
-        dyfloat = float(dy)
+        float(y), float(dy)
 
     def test_function_value(self):
         """
@@ -466,6 +543,7 @@ class TestWLSPredict(unittest.TestCase):
             dy2, 527. / 35600.
         )
 
+
 class TestQuality(unittest.TestCase):
     """
     Test the quality function
@@ -473,10 +551,10 @@ class TestQuality(unittest.TestCase):
 
     def setUp(self):
         rho = np.linspace(-1, 1, num=11)
-        l   = np.logspace(1, 3, num=3)
+        l = np.logspace(1, 3, num=3)
         l_mesh, rho_mesh = np.meshgrid(l, rho, indexing='ij')
-        a   = 1. / (1. + np.exp(- np.log10(l_mesh) * rho_mesh))
-        da  = np.ones_like(a) * 1e-2
+        a = 1. / (1. + np.exp(- np.log10(l_mesh) * rho_mesh))
+        da = np.ones_like(a) * 1e-2
         self.scaled_data = fss.scaledata(l, rho, a, da, 0, 1, 0)
 
     def tearDown(self):
@@ -552,7 +630,7 @@ class TestQuality(unittest.TestCase):
         args = list(self.scaled_data)
 
         # manipulate x at some dimension
-        args[0][1,3] = args[0][1,1]
+        args[0][1, 3] = args[0][1, 1]
 
         self.assertRaises(ValueError, fss.quality, *args)
 

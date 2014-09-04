@@ -234,6 +234,7 @@ def _wls_linearfit_predict(x, w, wx, wy, wxx, wxy, select):
 
     return y, dy2
 
+
 def _jprimes(x, i):
     """
     Helper function to return the j' indices for the master curve fit
@@ -263,7 +264,8 @@ def _jprimes(x, i):
 
     k, n = x.shape
     for i_prime in range(k):
-        if i_prime == i: continue
+        if i_prime == i:
+            continue
 
         j_primes[i_prime, :] = (
             np.searchsorted(
@@ -277,6 +279,30 @@ def _jprimes(x, i):
     ret[j_primes_mask] = j_primes[j_primes_mask]
 
     return ret
+
+
+def _select_mask(j, j_primes):
+    """
+    Return a boolean mask for selecting the data subset according to the j'
+
+    Parameters
+    ----------
+    j : int
+        current j index
+
+    j_primes : ndarray
+        result from _jprimes call
+    """
+
+    ret = np.zeros_like(j_primes, dtype=bool)
+    my_iprimes = np.invert(np.isnan(j_primes[:, j])).nonzero()[0]
+    my_jprimes = j_primes[my_iprimes, j]
+    my_jprimes = my_jprimes.astype(np.int)
+    ret[my_iprimes, my_jprimes] = True
+    ret[my_iprimes, my_jprimes + 1] = True
+
+    return ret
+
 
 def quality(x, y, dy):
 
@@ -317,36 +343,17 @@ def quality(x, y, dy):
 
     for i in range(k):
 
-        j_primes = _jprimes(x, i)
+        j_primes = _jprimes(x=x, i=i)
 
         for j in range(n):
 
-            # get the mask for the j' for this specific j
-            j_primes_mask_j = j_primes_mask[:, j]
+            # boolean mask for selected data x_l, y_l, dy_l
+            select = _select_mask(j=j, j_primes=j_primes)
 
-            if not j_primes_mask_j.any():
+            if not select.any():
                 # no data to select
                 # master curve estimate Y_ij remains undefined
                 continue
-
-            # boolean mask for selected data x_l, y_l, dy_l
-            select = np.zeros_like(x, dtype=bool)
-
-            # select all x_i'j' for x_ij
-            select[
-                j_primes_mask[:, j].nonzero(),  # the i' indices
-                j_primes[:, j][                 # the j' indices
-                    j_primes_mask[:, j]
-                ]
-            ] = True
-
-            # select all x_i'(j'+1) for x_ij
-            select[
-                j_primes_mask[:, j].nonzero(),  # the i' indices
-                j_primes[:, j][                 # the j' + 1 indices
-                    j_primes_mask[:, j]
-                ] + 1
-            ] = True
 
             # master curve estimate
             master_y[i, j], master_dy2[i, j] = _wls_linearfit_predict(
