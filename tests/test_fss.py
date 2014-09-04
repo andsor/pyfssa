@@ -10,7 +10,6 @@ import fss
 
 
 class TestScaleData(unittest.TestCase):
-
     """Test data scaling function."""
 
     def setUp(self):
@@ -212,6 +211,24 @@ class TestScaleData(unittest.TestCase):
         result = fss.scaledata(**self.default_params)
         self.assertTrue(np.all(args['a'] == result.y))
 
+    def test_values(self):
+        """
+        Check some arbitrary value
+        """
+
+        l = self.default_params['l'][2]
+        rho = self.default_params['rho'][3]
+        rho_c = self.default_params['rho_c']
+        nu = self.default_params['nu']
+        zeta = self.default_params['zeta']
+        a = self.default_params['a'][2, 3]
+        da = self.default_params['da'][2, 3]
+
+        result = fss.scaledata(**self.default_params)
+        self.assertAlmostEqual(result.x[2, 3], l ** (1. / nu) * (rho - rho_c))
+        self.assertAlmostEqual(result.y[2, 3], l ** (- zeta / nu) * a)
+        self.assertAlmostEqual(result.dy[2, 3], l ** (- zeta / nu) * da)
+
     def _test_for_float(self, callable, param, default_args):
         """
         Test that callable raises TypeError when param is not float
@@ -248,6 +265,192 @@ class TestScaleData(unittest.TestCase):
         args[param] = np.zeros(shape=(2, 3, 4))
         self.assertRaises(ValueError, callable, **args)
 
+
+class TestWLSPredict(unittest.TestCase):
+    """
+    Test the Weighted Least Squares Prediction Function
+    """
+
+    def setUp(self):
+        # set up default arguments
+        x = np.array([-2, 0, -10, 10], dtype=float)
+        y = np.array([-4, 0, -100, 100], dtype=float)
+        dy = np.array([0.2, 0.1, 1, 1])
+        w = dy ** (-2)
+        wx = w * x
+        wy = w * y
+        wxx = w * x * x
+        wxy = w * x * y
+        select = np.ones_like(x, dtype=bool)
+        x = 1.0
+        self.default_args = {
+            'x': x,
+            'w': w,
+            'wx': wx,
+            'wy': wy,
+            'wxx': wxx,
+            'wxy': wxy,
+            'select': select,
+        }
+
+    def tearDown(self):
+        pass
+
+    def test_existence(self):
+        """
+        Test for function existence
+        """
+        self.assertTrue(
+            hasattr(fss.fss, '_wls_linearfit_predict'),
+            msg='No such function: fss.fss._wls_linearfit_predict'
+        )
+
+    def test_signature(self):
+        """
+        Test wls function signature
+        """
+        try:
+            args = inspect.signature(fss.fss._wls_linearfit_predict).parameters
+        except:
+            args = inspect.getargspec(fss.fss._wls_linearfit_predict).args
+
+        fields = ['x', 'w', 'wx', 'wy', 'wxx', 'wxy', 'select']
+
+        for field in fields:
+            try:  # python 3
+                with self.subTest(i=field):
+                    self.assertIn(field, args)
+            except AttributeError:  # python 2
+                self.assertIn(field, args)
+
+    def test_return_type(self):
+        """
+        Tests for correct return
+        """
+        ret = fss.fss._wls_linearfit_predict(**self.default_args)
+        y = float(ret[0])
+        dy = float(ret[1])
+        y, dy = fss.fss._wls_linearfit_predict(**self.default_args)
+        yfloat = float(y)
+        dyfloat = float(dy)
+
+    def test_function_value(self):
+        """
+        Test for a concrete function value
+        """
+        y, dy2 = fss.fss._wls_linearfit_predict(**self.default_args)
+        self.assertAlmostEqual(
+            y, float(274400. / 35600. + 80000. / 35600.)
+        )
+        self.assertAlmostEqual(
+            dy2, 527. / 35600.
+        )
+
+class TestQuality(unittest.TestCase):
+    """
+    Test the quality function
+    """
+
+    def setUp(self):
+        rho = np.linspace(-1, 1, num=11)
+        l   = np.logspace(1, 3, num=3)
+        l_mesh, rho_mesh = np.meshgrid(l, rho, indexing='ij')
+        a   = 1. / (1. + np.exp(- np.log10(l_mesh) * rho_mesh))
+        da  = np.ones_like(a) * 1e-2
+        self.scaled_data = fss.scaledata(l, rho, a, da, 0, 1, 0)
+
+    def tearDown(self):
+        pass
+
+    def test_call(self):
+        """
+        Test function call
+        """
+        self.assertTrue(
+            hasattr(fss, 'quality'),
+            msg='No such function: fss.quality'
+        )
+
+    def test_signature(self):
+        """
+        Test quality function signature
+        """
+        try:
+            args = inspect.signature(fss.quality).parameters
+        except:
+            args = inspect.getargspec(fss.quality).args
+
+        fields = ['x', 'y', 'dy']
+
+        for field in fields:
+            try:  # python 3
+                with self.subTest(i=field):
+                    self.assertIn(field, args)
+            except AttributeError:  # python 2
+                self.assertIn(field, args)
+
+    def test_args_2d_array_like(self):
+        """
+        Test that function raises ValueError when one of the arguments is not
+        2-D array_like
+        """
+
+        # a should be 2-D array_like
+        args = ['x', 'y', 'dy']
+
+        for i in range(len(args)):
+            try:  # python 3
+                with self.subTest(i=i):
+                    self._test_for_2d_array_like(
+                        fss.quality, i, self.scaled_data
+                    )
+            except:  # python 2
+                self._test_for_2d_array_like(
+                    fss.quality, i, self.scaled_data
+                )
+
+    def test_args_of_same_shape(self):
+        """
+        Test that function raises ValueError if the shapes of the arguments
+        differ
+        """
+        args = list(self.scaled_data)
+        for i in range(len(args)):
+            args = list(self.scaled_data)
+            args[i] = np.zeros(shape=(134, 23))
+            try:  # python 3
+                with self.subTest(i=i):
+                    self.assertRaises(ValueError, fss.quality, *args)
+            except AttributeError:  # python 2
+                self.assertRaises(ValueError, fss.quality, *args)
+
+    def test_x_sorted(self):
+        """
+        Test that function raises ValueError if x is not sorted in the second
+        dimension (parameter values)
+        """
+        args = list(self.scaled_data)
+
+        # manipulate x at some dimension
+        args[0][1,3] = args[0][1,1]
+
+        self.assertRaises(ValueError, fss.quality, *args)
+
+    def _test_for_2d_array_like(self, callable, param, default_args):
+        """
+        Test that callable raises ValueError when param is not 2-D array_like
+        """
+        args = list(default_args)
+        args[param] = 0.0
+        self.assertRaises(ValueError, callable, *args)
+
+        args = list(default_args)
+        args[param] = np.zeros(2)
+        self.assertRaises(ValueError, callable, *args)
+
+        args = list(default_args)
+        args[param] = np.zeros(shape=(2, 3, 4))
+        self.assertRaises(ValueError, callable, *args)
 
 if __name__ == '__main__':
     unittest.main()
