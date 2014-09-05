@@ -4,6 +4,7 @@
 import unittest
 import inspect
 import numpy as np
+import scipy.optimize
 import copy
 
 import fss
@@ -639,7 +640,8 @@ class TestQuality(unittest.TestCase):
         Test that function returns close to zero value if fed with the same x
         and y values
         """
-        master_curve = lambda x: 1. / (1. + np.exp(5 * (1. - x)))
+        def master_curve(x):
+            return 1. / (1. + np.exp(5 * (1. - x)))
 
         x = np.linspace(0, 2)
         x_array = np.row_stack([x for i in range(10)])
@@ -655,7 +657,8 @@ class TestQuality(unittest.TestCase):
         Test that function returns close to one value if fed with the same x
         and y values with some standard error applied
         """
-        master_curve = lambda x: 1. / (1. + np.exp(5 * (1. - x)))
+        def master_curve(x):
+            return 1. / (1. + np.exp(5 * (1. - x)))
 
         x = np.linspace(0, 2)
         x_array = np.row_stack([x for i in range(10)])
@@ -666,7 +669,6 @@ class TestQuality(unittest.TestCase):
         ret = fss.quality(x_array, y_array, dy_array)
         self.assertGreater(ret, np.power(10, -0.5))
         self.assertLess(ret, np.power(10, 0.5))
-
 
     def _test_for_2d_array_like(self, callable, param, default_args):
         """
@@ -686,3 +688,200 @@ class TestQuality(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class TestNelderMeadErrors(unittest.TestCase):
+    """
+    Test the Nelder Mead errors helper function
+    """
+
+    def setUp(self):
+        self.n = 2
+        self.sim = np.array([[0, 0], [1, 0], [0, 1]])
+        self.ymin = 1.42
+
+        def identity_curvature(x):
+            return self.ymin + (
+                0.5 * np.sum(x**2) if x.ndim == 1
+                else 0.5 * np.sum(x**2, axis=1)
+            )
+
+        self.fun = identity_curvature
+        self.fsim = self.fun(self.sim)
+        self.default_args = {
+            'sim': self.sim,
+            'fun': self.fun,
+            'fsim': self.fsim,
+        }
+
+    def tearDown(self):
+        pass
+
+    def test_call(self):
+        """
+        Test function call
+        """
+        self.assertTrue(
+            hasattr(fss.fss, '_neldermead_errors'),
+            msg='No such function: fss.fss._neldermead_errors'
+        )
+
+    def test_signature(self):
+        """
+        Test function signature
+        """
+        try:
+            args = inspect.signature(fss.fss._neldermead_errors).parameters
+        except:
+            args = inspect.getargspec(fss.fss._neldermead_errors).args
+
+        fields = ['sim', 'fsim', 'fun']
+
+        for field in fields:
+            try:  # python 3
+                with self.subTest(i=field):
+                    self.assertIn(field, args)
+            except AttributeError:  # python 2
+                self.assertIn(field, args)
+
+    def test_return_errors_and_varco_matrix(self):
+        """
+        Test that the function returns the standard errors and the whole
+        variance--covariance matrix
+        """
+        errors, varco = fss.fss._neldermead_errors(**self.default_args)
+        self.assertTupleEqual(errors.shape, (self.n, ))
+        self.assertTupleEqual(varco.shape, (self.n, self.n))
+
+    def test_identity_hessian(self):
+        """
+        Test function returns correct errors and variance--covariance matrix for
+        identity hessian (curvature)
+        """
+        errors, varco = fss.fss._neldermead_errors(**self.default_args)
+        self.assertTrue(np.allclose(errors, np.sqrt(2. * self.ymin)))
+        self.assertTrue(np.allclose(varco, 2. * self.ymin * np.eye(self.n)))
+
+    def test_ellipsoidal_hessian(self):
+        """
+        Test function returns correct errors and variance--covariance matrix for
+        ellipsoidal hessian (curvature)
+        """
+        args = copy.deepcopy(self.default_args)
+
+        def ellipsoidal_curvature(x):
+            return self.ymin + (
+                0.5 * np.sum(x**2) - 0.5 * np.prod(x) if x.ndim == 1
+                else 0.5 * np.sum(x**2, axis=1) - 0.5 * np.prod(x, axis=1)
+            )
+
+        args['fun'] = ellipsoidal_curvature
+        errors, varco = fss.fss._neldermead_errors(**args)
+        self.assertTrue(np.allclose(errors, np.sqrt(2. * self.ymin * 4. / 3.)))
+        self.assertTrue(np.allclose(
+            varco,
+            2. * self.ymin * np.eye(self.n) * 4. / 3.
+            + (np.ones((self.n, self.n)) - np.eye(self.n)) * 2. * self.ymin
+            * 2. / 3.
+        ))
+
+
+class TestNelderMead(unittest.TestCase):
+    """
+    Test the Nealder Mead with errors implementation
+    """
+
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+    def test_call(self):
+        """
+        Test function call
+        """
+        self.assertTrue(
+            hasattr(fss.fss, '_minimize_neldermead_witherrors'),
+            msg='No such function: fss.fss._minimize_neldermead_witherrors'
+        )
+
+    def test_signature(self):
+        """
+        Test function signature
+        """
+        try:
+            args = inspect.signature(
+                fss.fss._minimize_neldermead_witherrors
+            ).parameters
+        except:
+            args = inspect.getargspec(
+                fss.fss._minimize_neldermead_witherrors
+            ).args
+
+        fields = ['fun', 'x0', 'args', 'callback', 'xtol', 'ftol', 'maxiter',
+                  'maxfev', 'disp', 'return_all', 'with_errors'
+                  ]
+
+        for field in fields:
+            try:  # python 3
+                with self.subTest(i=field):
+                    self.assertIn(field, args)
+            except AttributeError:  # python 2
+                self.assertIn(field, args)
+
+    def test_exact_results_as_original_method(self):
+        """
+        Test that the modified method returns exactly the same results as the
+        original method (except for the additional errors)
+        """
+        x0 = [1.3, 0.7, 0.8, 1.9, 1.2]
+        res_original = scipy.optimize.minimize(
+            scipy.optimize.rosen, x0, method='Nelder-Mead'
+        )
+
+        res_witherrors = scipy.optimize.minimize(
+            scipy.optimize.rosen,
+            x0,
+            method=fss.fss._minimize_neldermead_witherrors
+        )
+
+        fields = ['fun', 'status', 'success', 'message']
+        for field in fields:
+            try:  # python 3
+                with self.subTest(i=field):
+                    self.assertEqual(
+                        res_original[field],
+                        res_witherrors[field]
+                    )
+            except AttributeError:  # python 2
+                self.assertEqual(
+                    res_original[field],
+                    res_witherrors[field]
+                )
+
+        self.assertTrue(np.all(
+            res_original['x'] == res_witherrors['x']
+        ))
+
+    def test_returns_errors(self):
+        """
+        Test that the modified method returns the errors and
+        variance--covariance matrix
+        """
+        x0 = [1.3, 0.7, 0.8, 1.9, 1.2]
+
+        res = scipy.optimize.minimize(
+            scipy.optimize.rosen,
+            x0,
+            method=fss.fss._minimize_neldermead_witherrors
+        )
+
+        errors, varco = fss.fss._neldermead_errors(
+            sim=res['sim'],
+            fsim=res['fsim'],
+            fun=scipy.optimize.rosen
+        )
+
+        self.assertTrue(np.all(res['errors'] == errors))
+        self.assertTrue(np.all(res['varco'] == varco))
