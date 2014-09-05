@@ -1,3 +1,5 @@
+.. _neldermead:
+
 The Nelder--Mead algorithm
 ==========================
 

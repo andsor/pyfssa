@@ -885,3 +885,89 @@ class TestNelderMead(unittest.TestCase):
 
         self.assertTrue(np.all(res['errors'] == errors))
         self.assertTrue(np.all(res['varco'] == varco))
+
+
+class TestAutoscale(unittest.TestCase):
+    """
+    Test the autoscale function
+    """
+
+    def setUp(self):
+        self.l = [ 10, 100, 1000 ]
+        self.rho = np.linspace(0.9, 1.1)
+
+        l_mesh, rho_mesh = np.meshgrid(self.l, self.rho, indexing='ij')
+        self.x = np.power(l_mesh, 0.5) * (rho_mesh - 1.)
+
+        def master_curve(x):
+            return 1. / (1. + np.exp( - x))
+
+        self.master_curve = master_curve
+
+        self.y = self.master_curve(self.x)
+        self.y += np.random.randn(*self.y.shape) * self.y / 100.
+        self.dy = self.y / 100.
+        self.a = self.y
+        self.da = self.dy
+        self.rho_c0 = 0.95
+        self.nu0 = 2.0
+        self.zeta0 = 0.0
+        self.rho_c = 1.0
+        self.nu = 2.0
+        self.zeta = 0.0
+
+        self.default_args = {
+            'l': self.l,
+            'rho': self.rho,
+            'a': self.a,
+            'da': self.da,
+            'rho_c0': self.rho_c0,
+            'nu0': self.nu0,
+            'zeta0': self.zeta0
+        }
+
+    def tearDown(self):
+        pass
+
+    def test_call(self):
+        """
+        Test function call
+        """
+        self.assertTrue(
+            hasattr(fss, 'autoscale'),
+            msg='No such function: fss.autoscale'
+        )
+
+    def test_signature(self):
+        """
+        Test function signature
+        """
+        try:
+            args = inspect.signature(fss.autoscale).parameters
+        except:
+            args = inspect.getargspec(fss.autoscale).args
+
+        fields = ['l', 'rho', 'a', 'da', 'rho_c0', 'nu0', 'zeta0']
+
+        for field in fields:
+            try:  # python 3
+                with self.subTest(i=field):
+                    self.assertIn(field, args)
+            except AttributeError:  # python 2
+                self.assertIn(field, args)
+
+    def test_return_type(self):
+        """
+        Test that function returns correct type
+        """
+        res = fss.autoscale(**self.default_args)
+
+        fields = ['success', 'x', 'rho', 'nu', 'zeta', 'drho', 'dnu', 'dzeta',
+                  'errors', 'varco']
+
+        for field in fields:
+            try:  # python 3
+                with self.subTest(i=field):
+                    self.assertIn(field, res)
+            except AttributeError:  # python 2
+                self.assertIn(field, res)

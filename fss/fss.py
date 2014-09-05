@@ -7,6 +7,9 @@ Routines for finite-size scaling analyses
 The **fss** package provides routines to perform finite-size scaling analyses on
 experimental data [1]_ [2]_.
 
+It has been inspired by Oliver Melchert and his superb **autoScale** package
+[3]_.
+
 Routines
 --------
 
@@ -15,6 +18,7 @@ Routines
 
    quality
    scaledata
+   autoscale
 
 Classes
 -------
@@ -33,6 +37,9 @@ References
    Physics <http://dx.doi.org/10.1007/978-3-642-03163-2>`_ (Springer, Berlin,
    Heidelberg, 2010)
 
+.. [3] O. Melchert, `arXiv:0910.5403 <http://arxiv.org/abs/0910.5403>`_
+   (2009)
+
 """
 
 # Python 2/3 compatibility
@@ -43,6 +50,7 @@ from future.builtins import *
 import numpy as np
 from collections import namedtuple
 
+import scipy.optimize
 from scipy.optimize.optimize import (
     wrap_function, _status_message, OptimizeResult
 )
@@ -108,7 +116,7 @@ def scaledata(l, rho, a, da, rho_c, nu, zeta):
 
     such that all data points :ref:`collapse <data-collapse-method>` onto the
     single curve :math:`\tilde{f}(x)` with the right choice of :math:`\varrho_c,
-    \nu, \zeta` [3]_ [4]_.
+    \nu, \zeta` [1]_ [2]_.
 
     Raises
     ------
@@ -121,10 +129,10 @@ def scaledata(l, rho, a, da, rho_c, nu, zeta):
     References
     ----------
 
-    .. [3] M. E. J. Newman and G. T. Barkema, Monte Carlo Methods in Statistical
+    .. [1] M. E. J. Newman and G. T. Barkema, Monte Carlo Methods in Statistical
        Physics (Oxford University Press, 1999)
 
-    .. [4] K. Binder and D. W. Heermann, `Monte Carlo Simulation in Statistical
+    .. [2] K. Binder and D. W. Heermann, `Monte Carlo Simulation in Statistical
        Physics <http://dx.doi.org/10.1007/978-3-642-03163-2>`_ (Springer,
        Berlin, Heidelberg, 2010)
     '''
@@ -336,7 +344,7 @@ def quality(x, y, dy):
     Notes
     -----
     This is the implementation of the reduced :math:`\chi^2` quality function
-    :math:`S` by Houdayer & Hartmann [5]_.
+    :math:`S` by Houdayer & Hartmann [1]_.
     It should attain a minimum of around :math:`1` for an optimal fit, and be
     much larger otherwise.
 
@@ -345,10 +353,10 @@ def quality(x, y, dy):
 
     References
     ----------
-
-    .. [5] J. Houdayer and A. Hartmann, Physical Review B 70, 014418+ (2004)
+    .. [1] J. Houdayer and A. Hartmann, Physical Review B 70, 014418+ (2004)
         `doi:10.1103/physrevb.70.014418
         <http://dx.doi.org/doi:10.1103/physrevb.70.014418>`_
+
     '''
 
     # arguments should be 2-D array_like
@@ -429,6 +437,21 @@ def _neldermead_errors(sim, fsim, fun):
     # fit quadratic coefficients
     n = len(sim) - 1
 
+    ymin = fsim[0]
+
+    sim = np.copy(sim)
+    fsim = np.copy(fsim)
+
+    centroid = np.mean(sim, axis=0)
+    fcentroid = fun(centroid)
+
+    # enlarge distance of simplex vertices from centroid until all have at least
+    # an absolute function value distance of 0.1
+    for i in range(n + 1):
+        while np.abs(fsim[i] - fcentroid) < 0.01:
+            sim[i] += sim[i] - centroid
+            fsim[i] = fun(sim[i])
+
     # the vertices and the midpoints x_ij
     x = 0.5 * (
         sim[np.mgrid[0:n+1, 0:n+1]][1]
@@ -469,7 +492,7 @@ def _neldermead_errors(sim, fsim, fun):
     #for i in range(n):
     #    assert np.array_equal(q[:, i], sim[i + 1] - sim[0])
 
-    varco = fsim[0] * np.dot(q, np.dot(np.linalg.inv(b), q.T))
+    varco = ymin * np.dot(q, np.dot(np.linalg.inv(b), q.T))
     return np.sqrt(np.diag(varco)), varco
 
 
@@ -503,7 +526,7 @@ def _minimize_neldermead_witherrors(
     -----
     Adapted from the original
     :py:func:`scipy.optimize.optimize._minimize_neldermead` function to include
-    errors according to [4]_
+    errors according to [1]_
     Note that the errors are calculated for minimizing the reduced chi-square
     statistic!
 
@@ -516,7 +539,7 @@ def _minimize_neldermead_witherrors(
 
     References
     ----------
-    .. [4] J. A. Nelder and R. Mead, The Computer Journal 7, 308 (1965),
+    .. [1] J. A. Nelder and R. Mead, The Computer Journal 7, 308 (1965),
        `doi:10.1093/comjnl/7.4.308 <http://dx.doi.org/10.1093/comjnl/7.4.308>`_
 
     """
@@ -662,3 +685,97 @@ def _minimize_neldermead_witherrors(
     if retall:
         result['allvecs'] = allvecs
     return result
+
+
+def autoscale(l, rho, a, da, rho_c0, nu0, zeta0, **kwargs):
+    """
+    Automatically scale finite-size data and fit critical point and exponents
+
+    Parameters
+    ----------
+    l, rho, a, da : array_like
+        input for the :py:func:`scaledata` function
+
+    rho_c0, nu0, zeta0 : float
+        initial guesses for the critical point and exponents
+
+    Returns
+    -------
+    res : OptimizeResult
+
+    res['success'] : bool
+        Indicates whether the optimization algorithm has terminated
+        successfully.
+
+    res['x'] : ndarray
+
+    res['rho'], res['nu'], res['zeta'] : float
+        The fitted critical point and exponents, ``res['x'] == [res['rho'],
+        res['nu'], res['zeta']]``
+
+    res['drho'], res['dnu'], res['dzeta'] : float
+        The respective standard errors derived from fitting the curvature at the
+        minimum, ``res['errors'] == [res['drho'], res['dnu'], res['dzeta']]``.
+
+    res['errors'], res['varco'] : ndarray
+        The standard errors as a vector, and the full variance--covariance
+        matrix (the diagonal entries of which are the squared standard errors),
+        ``np.sqrt(np.diag(res['varco'])) == res['errors']``
+
+    See also
+    --------
+    scaledata
+        For the `l`, `rho`, `a`, `da` input parameters
+
+    quality
+        The goal function of the optimization
+
+    scipy.optimize.minimize
+        The optimization wrapper routine
+
+    scipy.optimize.OptimizeResult
+        The return type
+
+    Notes
+    -----
+    This implementation uses the quality function by Houdayer & Hartmann [1]_
+    which measures the quality of the data collapse, see the sections
+    :ref:`data-collapse-method` and :ref:`quality-function` in the manual.
+
+    This function and the whole fss package have been inspired by Oliver
+    Melchert and his superb **autoScale** package [2]_.
+
+    The critical point and exponents, including its standard errors and
+    (co)variances, are fitted by the Nelder--Mead algorithm, see the section
+    :ref:`neldermead` in the manual.
+
+    References
+    ----------
+    .. [1] J. Houdayer and A. Hartmann, Physical Review B 70, 014418+ (2004)
+        `doi:10.1103/physrevb.70.014418
+        <http://dx.doi.org/doi:10.1103/physrevb.70.014418>`_
+
+    .. [2] O. Melchert, `arXiv:0910.5403 <http://arxiv.org/abs/0910.5403>`_
+       (2009)
+
+    """
+
+    def goal_function(x):
+        return quality(*scaledata(
+            rho=rho, l=l, a=a, da=da, nu=x[1], zeta=x[2], rho_c=x[0]
+        ))
+
+    ret = scipy.optimize.minimize(
+        goal_function,
+        [rho_c0, nu0, zeta0],
+        method=_minimize_neldermead_witherrors,
+        options={
+            'xtol': 1e-2,
+            'ftol': 1e-2
+        }
+    )
+
+    ret['rho'], ret['nu'], ret['zeta'] = ret['x']
+    ret['drho'], ret['dnu'], ret['dzeta'] = ret['errors']
+
+    return ret
