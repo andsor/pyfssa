@@ -41,11 +41,9 @@ The scaled data are
 
 .. math::
 
-   \begin{align}
    y_{ij} & := L_i^{-\zeta/\nu} a_{L_i, \varrho_j} \\
    dy_{ij} & := L_i^{-\zeta/\nu} da_{L_i, \varrho_j} \\
    x_{ij}  & := L_i^{1/\nu}(\varrho_j - \varrho_c).
-   \end{align}
 
 The sum in the quality function :math:`S` only involves terms for which the
 estimated value :math:`Y_{ij}` of the master curve at :math:`x_{ij}` is
@@ -77,10 +75,8 @@ are
 
 .. math::
 
-   \begin{align*}
    \hat{b} &= \frac{1}{\Delta} (K_{xx}K_y - K_xK_{xy}) \\
    \hat{m} &= \frac{1}{\Delta} (K K_{xy} - K_x K_y)
-   \end{align*}
 
    \hat{\sigma}_b^2 = \frac{K_{xx}}{\Delta} , \hat{\sigma}_m^2 = \frac{K}{\Delta},
    \hat{\sigma}_{bm} = - \frac{K_x}{\Delta}
