@@ -1,3 +1,177 @@
+@article{Kolda2003Optimization,
+    abstract = {Direct search methods are best known as unconstrained optimization techniques that do not explicitly use derivatives. Direct search methods were formally proposed and widely applied in the 1960s but fell out of favor with the mathematical optimization community by the early 1970s because they lacked coherent mathematical analysis. Nonetheless, users remained loyal to these methods, most of which were easy to program, some of which were reliable. In the past fifteen years, these methods have seen a revival due, in part, to the appearance of mathematical analysis, as well as to interest in parallel and distributed computing.
+
+This review begins by briefly summarizing the history of direct search methods and considering the special properties of problems for which they are well suited. Our focus then turns to a broad class of methods for which we provide a unifying framework that lends itself to a variety of convergence results. The underlying principles allow generalization to handle bound constraints and linear constraints. We also discuss extensions to problems with nonlinear constraints.},
+    author = {Kolda, Tamara G. and Lewis, Robert M. and Torczon, Virginia},
+    citeulike-article-id = {9942868},
+    citeulike-linkout-0 = {http://dx.doi.org/10.1137/s003614450242889},
+    doi = {10.1137/s003614450242889},
+    journal = {SIAM Review},
+    keywords = {optimization},
+    number = {3},
+    pages = {385--482},
+    posted-at = {2014-09-05 18:54:00},
+    priority = {0},
+    title = {Optimization by Direct Search: New Perspectives on Some Classical and Modern Methods},
+    url = {http://dx.doi.org/10.1137/s003614450242889},
+    volume = {45},
+    year = {2003}
+}
+
+@article{Lagarias1998Convergence,
+    abstract = {The {Nelder--Mead} simplex algorithm, first published in 1965, is an enormously popular direct search method for multidimensional unconstrained minimization. Despite its widespread use, essentially no theoretical results have been proved explicitly for the {Nelder--Mead} algorithm. This paper presents convergence properties of the {Nelder--Mead} algorithm applied to strictly convex functions in dimensions 1 and 2. We prove convergence to a minimizer for dimension 1, and various limited convergence results for dimension 2. A counterexample of {McKinnon} gives a family of strictly convex functions in two dimensions and a set of initial conditions for which the {Nelder--Mead} algorithm converges to a nonminimizer. It is not yet known whether the {Nelder--Mead} method can be proved to converge to a minimizer for a more specialized class of convex functions in two dimensions.},
+    author = {Lagarias, Jeffrey C. and Reeds, James A. and Wright, Margaret H. and Wright, Paul E.},
+    citeulike-article-id = {3130144},
+    citeulike-linkout-0 = {http://portal.acm.org/citation.cfm?id=588893.589108},
+    citeulike-linkout-1 = {http://dx.doi.org/10.1137/s1052623496303470},
+    doi = {10.1137/s1052623496303470},
+    journal = {SIAM Journal on Optimization},
+    keywords = {optimization},
+    number = {1},
+    pages = {112--147},
+    posted-at = {2014-09-05 18:53:55},
+    priority = {0},
+    title = {Convergence Properties of the {Nelder--Mead} Simplex Method in Low Dimensions},
+    url = {http://dx.doi.org/10.1137/s1052623496303470},
+    volume = {9},
+    year = {1998}
+}
+
+@article{Spendley1962Sequential,
+    abstract = {A technique for empirical optimisation is presented in which a sequence of experimental designs each in the form of a regular or irregular simplex is used, each simplex having all vertices but one in common with the preceding simplex, and being completed by one new point. Reasons for the choice of design are outlined, and a formal procedure given. The performance of the technique in the presence and absence of error is studied and it is shown (a) that in the presence of error the rate of advance is inversely proportional to the error standard deviation, so that replication of observations is not beneficial, and (b) that the ?efficiency? of the technique appears to increase in direct proportion to the number of factors investigated. It is also noted that, since the direction of movement from each simplex is dependent solely on the ranking of the observations, the technique may be used even in circumstances when a response cannot be quantitatively assessed. Attention is drawn to the ease with which second-order designs having the minimum number of experimental points may be derived from a regular simplex, and a fitting procedure which avoids a direct matrix inversion is suggested. In a brief appendix one or two new rotatable designs derivable from a simplex are noted.},
+    author = {Spendley, W. and Hext, G. R. and Himsworth, F. R.},
+    citeulike-article-id = {13344006},
+    citeulike-linkout-0 = {http://dx.doi.org/10.1080/00401706.1962.10490033},
+    citeulike-linkout-1 = {http://www.tandfonline.com/doi/abs/10.1080/00401706.1962.10490033},
+    doi = {10.1080/00401706.1962.10490033},
+    journal = {Technometrics},
+    keywords = {optimization},
+    number = {4},
+    pages = {441--461},
+    posted-at = {2014-09-05 18:53:51},
+    priority = {0},
+    title = {Sequential Application of Simplex Designs in Optimisation and Evolutionary Operation},
+    url = {http://dx.doi.org/10.1080/00401706.1962.10490033},
+    volume = {4},
+    year = {1962}
+}
+
+@article{Singer2004Efficient,
+    abstract = {The {Nelder–Mead} or simplex search algorithm is one of the best known algorithms for unconstrained optimization of non–smooth functions. Even though the basic algorithm is quite simple, it is implemented in many different ways. Apart from some minor computational details, the main difference between various implementations lies in the selection of convergence (or termination) tests, which are used to break the iteration process. A fairly simple efficiency analysis of each iteration step reveals a potential computational bottleneck in the domain convergence test. To be efficient, such a test has to be sublinear in the number of vertices of the working simplex. We have tested some of the most common implementations of the {Nelder–Mead} algorithm, and none of them is efficient in this sense.
+
+Therefore, we propose a simple and efficient domain convergence test and discuss some of its properties. This test is based on tracking the volume of the working simplex throughout the iterations. Similar termination tests can also be applied in some other simplex–based direct search methods.},
+    author = {Singer, Sa\v{s}a and Singer, Sanja},
+    citeulike-article-id = {13344005},
+    citeulike-linkout-0 = {http://dx.doi.org/10.1002/anac.200410015},
+    doi = {10.1002/anac.200410015},
+    journal = {Applied Numerical Analysis \& Computational Mathematics},
+    keywords = {optimization},
+    number = {2},
+    pages = {524--534},
+    posted-at = {2014-09-05 18:53:46},
+    priority = {0},
+    title = {Efficient Implementation of the {Nelder-Mead} Search Algorithm},
+    url = {http://dx.doi.org/10.1002/anac.200410015},
+    volume = {1},
+    year = {2004}
+}
+
+@article{Price2002Convergent,
+    abstract = {The {Nelder–Mead} algorithm (1965) for unconstrained optimization has been used extensively to solve parameter estimation and other problems. Despite its age, it is still the method of choice for many practitioners in the fields of statistics, engineering, and the physical and medical sciences because it is easy to code and very easy to use. It belongs to a class of methods which do not require derivatives and which are often claimed to be robust for problems with discontinuities or where the function values are noisy. Recently (1998), it has been shown that the method can fail to converge or converge to nonsolutions on certain classes of problems. Only very limited convergence results exist for a restricted class of problems in one or two dimensions. In this paper, a provably convergent variant of the {Nelder–Mead} simplex method is presented and analyzed. Numerical results are included to show that the modified algorithm is effective in practice.},
+    author = {Price, C. J. and Coope, I. D. and Byatt, D.},
+    citeulike-article-id = {13344003},
+    citeulike-linkout-0 = {http://dx.doi.org/10.1023/a\%253a1014849028575},
+    citeulike-linkout-1 = {http://link.springer.com/article/10.1023/A\%3A1014849028575},
+    doi = {10.1023/a\%253a1014849028575},
+    journal = {Journal of Optimization Theory and Applications},
+    keywords = {optimization},
+    number = {1},
+    pages = {5--19},
+    posted-at = {2014-09-05 18:53:41},
+    priority = {0},
+    title = {A Convergent Variant of the {Nelder–Mead} Algorithm},
+    url = {http://dx.doi.org/10.1023/a\%253a1014849028575},
+    volume = {113},
+    year = {2002}
+}
+
+@article{Oliphant2007Python,
+    abstract = {By itself, Python is an excellent "steering" language for scientific codes written in other languages. However, with additional basic tools, Python transforms into a high-level language suited for scientific and engineering code that's often fast enough to be immediately useful but also flexible enough to be sped up with additional extensions.},
+    author = {Oliphant, Travis E.},
+    citeulike-article-id = {5662279},
+    citeulike-linkout-0 = {http://doi.ieeecomputersociety.org/10.1109/MCSE.2007.58},
+    citeulike-linkout-1 = {http://dx.doi.org/10.1109/mcse.2007.58},
+    citeulike-linkout-2 = {http://ieeexplore.ieee.org/xpls/abs\_all.jsp?arnumber=4160250},
+    doi = {10.1109/mcse.2007.58},
+    journal = {Computing in Science \& Engineering},
+    keywords = {scientific\_computing},
+    number = {3},
+    pages = {10--20},
+    posted-at = {2014-09-05 18:53:36},
+    priority = {2},
+    title = {Python for Scientific Computing},
+    url = {http://dx.doi.org/10.1109/mcse.2007.58},
+    volume = {9},
+    year = {2007}
+}
+
+@misc{Jones2001SciPy,
+    author = {Jones, Eric and Oliphant, Travis and Peterson, Pearu},
+    citeulike-article-id = {13344001},
+    citeulike-linkout-0 = {http://www.scipy.org},
+    keywords = {scientific\_computing},
+    note = {http://www.scipy.org/},
+    posted-at = {2014-09-05 18:53:33},
+    priority = {0},
+    title = {{SciPy}: Open source scientific tools for {Python}},
+    url = {http://www.scipy.org},
+    year = {2001--}
+}
+
+@article{Nelder1965Simplex,
+    abstract = {A method is described for the minimization of a function of n variables, which depends on the comparison of function values at the (n + 1) vertices of a general simplex, followed by the replacement of the vertex with the highest value by another point. The simplex adapts itself to the local landscape, and contracts on to the final minimum. The method is shown to be effective and computationally compact. A procedure is given for the estimation of the Hessian matrix in the neighbourhood of the minimum, needed in statistical estimation problems.},
+    author = {Nelder, J. A. and Mead, R.},
+    citeulike-article-id = {3009487},
+    citeulike-linkout-0 = {http://dx.doi.org/10.1093/comjnl/7.4.308},
+    citeulike-linkout-1 = {http://comjnl.oxfordjournals.org/content/7/4/308.abstract},
+    citeulike-linkout-2 = {http://comjnl.oxfordjournals.org/content/7/4/308.full.pdf},
+    citeulike-linkout-3 = {http://comjnl.oxfordjournals.org/cgi/content/abstract/7/4/308},
+    doi = {10.1093/comjnl/7.4.308},
+    journal = {The Computer Journal},
+    keywords = {optimization},
+    number = {4},
+    pages = {308--313},
+    posted-at = {2014-09-05 18:53:28},
+    priority = {0},
+    publisher = {Oxford University Press},
+    title = {A Simplex Method for Function Minimization},
+    url = {http://dx.doi.org/10.1093/comjnl/7.4.308},
+    volume = {7},
+    year = {1965}
+}
+
+@article{Singer2009NelderMead,
+    abstract = {The {Nelder-Mead} algorithm or simplex search algorithm, originally published in 1965 (Nelder and Mead, 1965), is one of the best known algorithms for multidimensional unconstrained optimization without derivatives. This method should not be confused with Dantzig's simplex method for linear programming, which is completely different, as it solves a linearly constrained linear problem.
+
+The basic algorithm is quite simple to understand and very easy to use. For these reasons, it is very popular in many fields of science and technology, especially in chemistry and medicine.
+
+The method does not require any derivative information, which makes it suitable for problems with non-smooth functions. It is widely used to solve parameter estimation and similar statistical problems, where the function values are uncertain or subject to noise. It can also be used for problems with discontinuous functions, which occur frequently in statistics and experimental mathematics.},
+    author = {Singer, Sa\v{s}a and Nelder, John},
+    citeulike-article-id = {13343996},
+    citeulike-linkout-0 = {http://dx.doi.org/10.4249/scholarpedia.2928},
+    doi = {10.4249/scholarpedia.2928},
+    journal = {Scholarpedia},
+    keywords = {optimization},
+    number = {7},
+    pages = {2928+},
+    posted-at = {2014-09-05 18:53:24},
+    priority = {0},
+    title = {{Nelder-Mead} algorithm},
+    url = {http://dx.doi.org/10.4249/scholarpedia.2928},
+    volume = {4},
+    year = {2009}
+}
+
 @misc{Melchert2009AutoScalepy,
     abstract = {{autoScale}.py is a program that performs an automatic finite-size scaling
 analysis for given sets of simulated data. It implements a quite general

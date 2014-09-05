@@ -17,6 +17,7 @@ Contents:
    readme
    fss-theory
    quality
+   nelder-mead
    reference
    license
    zbib
