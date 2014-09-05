@@ -634,6 +634,40 @@ class TestQuality(unittest.TestCase):
 
         self.assertRaises(ValueError, fss.quality, *args)
 
+    def test_zero_quality(self):
+        """
+        Test that function returns close to zero value if fed with the same x
+        and y values
+        """
+        master_curve = lambda x: 1. / (1. + np.exp(5 * (1. - x)))
+
+        x = np.linspace(0, 2)
+        x_array = np.row_stack([x for i in range(10)])
+        y_array = master_curve(x_array)
+        dy = 0.05
+        dy_array = dy * np.ones_like(y_array)
+        ret = fss.quality(x_array, y_array, dy_array)
+        self.assertGreaterEqual(ret, 0.)
+        self.assertLess(ret, 0.1)
+
+    def test_standard_quality(self):
+        """
+        Test that function returns close to one value if fed with the same x
+        and y values with some standard error applied
+        """
+        master_curve = lambda x: 1. / (1. + np.exp(5 * (1. - x)))
+
+        x = np.linspace(0, 2)
+        x_array = np.row_stack([x for i in range(10)])
+        y_array = master_curve(x_array)
+        dy = 0.05
+        dy_array = dy * np.ones_like(y_array)
+        y_array += dy * np.random.randn(*y_array.shape)
+        ret = fss.quality(x_array, y_array, dy_array)
+        self.assertGreater(ret, np.power(10, -0.5))
+        self.assertLess(ret, np.power(10, 0.5))
+
+
     def _test_for_2d_array_like(self, callable, param, default_args):
         """
         Test that callable raises ValueError when param is not 2-D array_like

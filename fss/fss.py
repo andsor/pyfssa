@@ -13,6 +13,7 @@ Routines
 .. autosummary::
    :nosignatures:
 
+   quality
    scaledata
 
 Classes
@@ -26,7 +27,7 @@ References
 ----------
 
 .. [1] M. E. J. Newman and G. T. Barkema, Monte Carlo Methods in Statistical
-   Physics* (Oxford University Press, 1999)
+   Physics (Oxford University Press, 1999)
 
 .. [2] K. Binder and D. W. Heermann, `Monte Carlo Simulation in Statistical
    Physics <http://dx.doi.org/10.1007/978-3-642-03163-2>`_ (Springer, Berlin,
@@ -103,7 +104,7 @@ def scaledata(l, rho, a, da, rho_c, nu, zeta):
 
     such that all data points :ref:`collapse <data-collapse-method>` onto the
     single curve :math:`\tilde{f}(x)` with the right choice of :math:`\varrho_c,
-    \nu, \zeta` [1]_ [2]_.
+    \nu, \zeta` [3]_ [4]_.
 
     Raises
     ------
@@ -116,10 +117,10 @@ def scaledata(l, rho, a, da, rho_c, nu, zeta):
     References
     ----------
 
-    .. [1] M. E. J. Newman and G. T. Barkema, Monte Carlo Methods in Statistical
-       Physics* (Oxford University Press, 1999)
+    .. [3] M. E. J. Newman and G. T. Barkema, Monte Carlo Methods in Statistical
+       Physics (Oxford University Press, 1999)
 
-    .. [2] K. Binder and D. W. Heermann, `Monte Carlo Simulation in Statistical
+    .. [4] K. Binder and D. W. Heermann, `Monte Carlo Simulation in Statistical
        Physics <http://dx.doi.org/10.1007/978-3-642-03163-2>`_ (Springer,
        Berlin, Heidelberg, 2010)
     '''
@@ -305,6 +306,46 @@ def _select_mask(j, j_primes):
 
 
 def quality(x, y, dy):
+    r'''
+    Quality of data collapse onto a master curve defined by the data
+
+    This is the reduced chi-square statistic for a data fit except that the
+    master curve is fitted from the data itself.
+
+    Parameters
+    ----------
+    x, y, dy : 2-D array_like
+        output from :py:func:`scaledata`, scaled data `x`, `y` with standard
+        errors `dy`
+
+    Returns
+    -------
+    float
+        the quality of the data collapse
+
+    Raises
+    ------
+    ValueError
+        if not all arrays `x`, `y`, `dy` have dimension 2, or if not all arrays
+        are of the same shape, or if `x` is not sorted along rows (``axis=1``)
+
+    Notes
+    -----
+    This is the implementation of the reduced :math:`\chi^2` quality function
+    :math:`S` by Houdayer & Hartmann [5]_.
+    It should attain a minimum of around :math:`1` for an optimal fit, and be
+    much larger otherwise.
+
+    For further information, see the :ref:`quality-function` section in the
+    manual.
+
+    References
+    ----------
+
+    .. [5] J. Houdayer and A. Hartmann, Physical Review B 70, 014418+ (2004)
+        `doi:10.1103/physrevb.70.014418
+        <http://dx.doi.org/doi:10.1103/physrevb.70.014418>`_
+    '''
 
     # arguments should be 2-D array_like
     x = np.asanyarray(x)

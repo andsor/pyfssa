@@ -16,6 +16,7 @@ Contents:
 
    readme
    fss-theory
+   quality
    reference
    license
    zbib

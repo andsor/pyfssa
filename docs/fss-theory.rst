@@ -1,5 +1,5 @@
-Theoretical background: finite-size scaling analysis
-====================================================
+Finite-size scaling analysis
+============================
 
 The finite-size scaling ansatz
 ------------------------------
@@ -115,3 +115,22 @@ Thus, the common intersection point of the measured curves :math:`p_{L,
 This estimate is unbiased with regards to the critical exponents, and "should
 be free" from systematic errors due to finite system size
 :cite:`Binder2010Monte`.
+
+Implementation in the fss package
+---------------------------------
+
+Routines
+~~~~~~~~
+
+.. autosummary::
+   :nosignatures:
+
+   fss.fss.scaledata
+
+Classes
+~~~~~~~
+
+.. autosummary::
+
+   fss.fss.ScaledData
+
