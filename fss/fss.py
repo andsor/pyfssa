@@ -758,6 +758,47 @@ def autoscale(l, rho, a, da, rho_c0, nu0, zeta0, **kwargs):
     .. [2] O. Melchert, `arXiv:0910.5403 <http://arxiv.org/abs/0910.5403>`_
        (2009)
 
+    Examples
+    --------
+    >>> # generate artificial scaling data from master curve
+    >>> # with rho_c == 1.0, nu == 2.0, zeta == 0.0
+    >>> import fss
+    >>> l = [ 10, 100, 1000 ]
+    >>> rho = np.linspace(0.9, 1.1)
+    >>> l_mesh, rho_mesh = np.meshgrid(l, rho, indexing='ij')
+    >>> master_curve = lambda x: 1. / (1. + np.exp( - x))
+    >>> x = np.power(l_mesh, 0.5) * (rho_mesh - 1.)
+    >>> y = master_curve(x)
+    >>> dy = y / 100.
+    >>> y += np.random.randn(*y.shape) * dy
+    >>> a = y
+    >>> da = dy
+    >>>
+    >>> # run autoscale
+    >>> fss.autoscale(l=l, rho=rho, a=a, da=da, rho_c0=0.9, nu0=2.0, zeta0=0.0)
+    varco: array([[  3.48404128e-06,   5.72603874e-05,  -2.26338928e-06],
+        [  5.72603874e-05,   2.10915133e-02,  -1.28212500e-04],
+        [ -2.26338928e-06,  -1.28212500e-04,   1.88163502e-06]])
+    dzeta: 0.0013717270192608684
+    fun: 2.2095309418677989
+    zeta: -0.00035713114892812982
+    drho: 0.0018665586740112224
+    fsim: array([ 2.20953094,  2.20953226,  2.20953272,  2.20953504])
+    dnu: 0.14522917505380872
+    rho: 0.9999052186821713
+    nu: 2.0366578589015862
+    status: 0
+    nit: 69
+    success: True
+    sim: array([[  9.99905219e-01,   2.03665786e+00,  -3.57131149e-04],
+        [  9.99905097e-01,   2.03658480e+00,  -3.56730933e-04],
+        [  9.99905351e-01,   2.03671238e+00,  -3.57425026e-04],
+        [  9.99905303e-01,   2.03665797e+00,  -3.57164729e-04]])
+    x: array([  9.99905219e-01,   2.03665786e+00,  -3.57131149e-04])
+    message: 'Optimization terminated successfully.'
+    errors: array([ 0.00186656,  0.14522918,  0.00137173])
+    nfev: 153
+
     """
 
     def goal_function(x):
