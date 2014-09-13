@@ -114,6 +114,12 @@ in the working directory root of the repository.
 
 .. _Development Mode: http://pythonhosted.org//setuptools/setuptools.html#development-mode
 
+
+Versioning
+~~~~~~~~~~
+
+This project `calculates the current package version number based on git tags <https://gist.github.com/ryanvolz/9e095624d46756ca0045>`_.
+
 Testing
 ~~~~~~~
 
@@ -146,7 +152,6 @@ For automatic test runs upon file changes run
    ./autotest.sh
 
 from the working directory of the repository.
-
 
 .. license-before-anchor
 
