@@ -55,3 +55,4 @@ docs/_build/
 *.swp
 .virtualenv*
 *.sw?
+README.local.md

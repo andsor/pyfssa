@@ -160,6 +160,10 @@ License
 
 .. license-after-anchor
 
+*This is the license information for the pyfss package excluding its
+separate documentation (the source of which lives under the docs directory in
+the package source).*
+
 Copyright 2014 Max Planck Society, Andreas Sorge
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -173,3 +177,17 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+Documentation license
+~~~~~~~~~~~~~~~~~~~~~
+
+*This is the license information for the pyfss package Documentation (the
+source of which lives under the docs directory in the package source).*
+
+.. image:: https://i.creativecommons.org/l/by/4.0/80x15.png
+   :alt: Creative Commons License
+   :target: http://creativecommons.org/licenses/by/4.0/
+
+pyfss Documentation by Andreas Sorge is licensed under a `Creative Commons
+Attribution 4.0 International License
+<http://creativecommons.org/licenses/by/4.0/>`_.
