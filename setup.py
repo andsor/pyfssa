@@ -41,7 +41,7 @@ def setup_package():
         version=get_version('fss', '_version.py'),
         description=('Finite-size scaling analysis at phase transitions'),
         long_description=long_description,
-        url='',
+        url='http://github.com/andsor/pyfss',
         author='Andreas Sorge',
         author_email='as@asorge.de',
         license='ASL',
