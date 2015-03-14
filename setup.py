@@ -33,7 +33,7 @@ def get_install_requirements(path):
 
 def setup_package():
     # Get the long description from the relevant file
-    with open(os.path.join(here, 'README.rst'), encoding='utf-8') as f:
+    with open(os.path.join(here, 'README.rst')) as f:
         long_description = f.read()
 
     setup(
