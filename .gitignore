@@ -56,3 +56,5 @@ docs/_build/
 .virtualenv*
 *.sw?
 README.local.md
+*/.ipynb_checkpoints
+.ipynb_checkpoints

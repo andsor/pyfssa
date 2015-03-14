@@ -7,7 +7,7 @@ transitions.
 Usage
 -----
 
-The **fss** package expects finite-size data in the following setting.
+The **fssa** package expects finite-size data in the following setting.
 
 .. math::
 
@@ -23,12 +23,12 @@ the `j`-th parameter value.
 `da` is like a 2-D numpy array which contains the standard errors in the
 observations.
 
-The **fss.autoscale** function attempts to determine the critical parameter and
+The **fssa.autoscale** function attempts to determine the critical parameter and
 exponents which entail an optimal data collapse. The initial guesses for
 :math:`\varrho_c, \nu, \zeta` are `rho_c0`, `nu0`, and `zeta0`.
 
->>> import fss
->>> fss.autoscale(l, rho, a, da, rho_c0, nu0, zeta0)
+>>> import fssa
+>>> fssa.autoscale(l, rho, a, da, rho_c0, nu0, zeta0)
 
 Package maintainer
 ------------------

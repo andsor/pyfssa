@@ -18,8 +18,8 @@
 """
 Routines for finite-size scaling analyses
 
-The **fss** package provides routines to perform finite-size scaling analyses on
-experimental data [1]_ [2]_.
+The **fssa** package provides routines to perform finite-size scaling analyses
+on experimental data [1]_ [2]_.
 
 It has been inspired by Oliver Melchert and his superb **autoScale** package
 [3]_.
@@ -756,7 +756,7 @@ def autoscale(l, rho, a, da, rho_c0, nu0, zeta0, **kwargs):
     which measures the quality of the data collapse, see the sections
     :ref:`data-collapse-method` and :ref:`quality-function` in the manual.
 
-    This function and the whole fss package have been inspired by Oliver
+    This function and the whole fssa package have been inspired by Oliver
     Melchert and his superb **autoScale** package [2]_.
 
     The critical point and exponents, including its standard errors and
@@ -776,7 +776,7 @@ def autoscale(l, rho, a, da, rho_c0, nu0, zeta0, **kwargs):
     --------
     >>> # generate artificial scaling data from master curve
     >>> # with rho_c == 1.0, nu == 2.0, zeta == 0.0
-    >>> import fss
+    >>> import fssa
     >>> l = [ 10, 100, 1000 ]
     >>> rho = np.linspace(0.9, 1.1)
     >>> l_mesh, rho_mesh = np.meshgrid(l, rho, indexing='ij')
@@ -789,7 +789,7 @@ def autoscale(l, rho, a, da, rho_c0, nu0, zeta0, **kwargs):
     >>> da = dy
     >>>
     >>> # run autoscale
-    >>> fss.autoscale(l=l, rho=rho, a=a, da=da, rho_c0=0.9, nu0=2.0, zeta0=0.0)
+    >>> fssa.autoscale(l=l, rho=rho, a=a, da=da, rho_c0=0.9, nu0=2.0, zeta0=0.0)
     varco: array([[  3.48404128e-06,   5.72603874e-05,  -2.26338928e-06],
         [  5.72603874e-05,   2.10915133e-02,  -1.28212500e-04],
         [ -2.26338928e-06,  -1.28212500e-04,   1.88163502e-06]])

@@ -98,8 +98,9 @@ with error propagation
    dY_{ij}^2 = \hat{\sigma}^2 x_{ij}^2 + 2 \hat{\sigma}_{bm} x_{ij} +
    \hat{\sigma}_b^2.
 
-Implementation in the fss package
----------------------------------
+
+Implementation in the fssa package
+----------------------------------
 
 Routines
 ~~~~~~~~
@@ -107,5 +108,5 @@ Routines
 .. autosummary::
    :nosignatures:
 
-   fss.fss.quality
+   fssa.fss.quality
 

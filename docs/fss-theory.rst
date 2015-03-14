@@ -116,8 +116,9 @@ This estimate is unbiased with regards to the critical exponents, and "should
 be free" from systematic errors due to finite system size
 :cite:`Binder2010Monte`.
 
-Implementation in the fss package
----------------------------------
+
+Implementation in the fssa package
+----------------------------------
 
 Routines
 ~~~~~~~~
@@ -125,12 +126,12 @@ Routines
 .. autosummary::
    :nosignatures:
 
-   fss.fss.scaledata
+   fssa.fss.scaledata
 
 Classes
 ~~~~~~~
 
 .. autosummary::
 
-   fss.fss.ScaledData
+   fssa.fss.ScaledData
 

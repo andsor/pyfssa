@@ -21,7 +21,7 @@ import numpy as np
 import scipy.optimize
 import copy
 
-import fss
+import fssa
 
 
 class TestScaleData(unittest.TestCase):
@@ -52,8 +52,8 @@ class TestScaleData(unittest.TestCase):
         Test function call
         """
         self.assertTrue(
-            hasattr(fss, 'scaledata'),
-            msg='No such function: fss.scaledata'
+            hasattr(fssa, 'scaledata'),
+            msg='No such function: fssa.scaledata'
         )
 
     def test_signature(self):
@@ -61,9 +61,9 @@ class TestScaleData(unittest.TestCase):
         Test scaledata function signature
         """
         try:
-            args = inspect.signature(fss.scaledata).parameters
+            args = inspect.signature(fssa.scaledata).parameters
         except:
-            args = inspect.getargspec(fss.scaledata).args
+            args = inspect.getargspec(fssa.scaledata).args
 
         self.assertIn('rho', args)
         self.assertIn('l', args)
@@ -79,7 +79,7 @@ class TestScaleData(unittest.TestCase):
         """
 
         # rho should be 1-D array_like
-        self._test_for_1d_array_like(fss.scaledata, 'rho', self.default_params)
+        self._test_for_1d_array_like(fssa.scaledata, 'rho', self.default_params)
 
     def test_l_1d_array_like(self):
         """
@@ -87,7 +87,7 @@ class TestScaleData(unittest.TestCase):
         """
 
         # l should be 1-D array_like
-        self._test_for_1d_array_like(fss.scaledata, 'l', self.default_params)
+        self._test_for_1d_array_like(fssa.scaledata, 'l', self.default_params)
 
     def test_a_2d_array_like(self):
         """
@@ -95,7 +95,7 @@ class TestScaleData(unittest.TestCase):
         """
 
         # a should be 2-D array_like
-        self._test_for_2d_array_like(fss.scaledata, 'a', self.default_params)
+        self._test_for_2d_array_like(fssa.scaledata, 'a', self.default_params)
 
     def test_a_has_l_rho_shape(self):
         """
@@ -106,7 +106,7 @@ class TestScaleData(unittest.TestCase):
         # a should have shape (rho.size, l.size)
         args = copy.deepcopy(self.default_params)
         args['a'] = np.ones(shape=(3, args['rho'].size - 1))
-        self.assertRaises(ValueError, fss.scaledata, **args)
+        self.assertRaises(ValueError, fssa.scaledata, **args)
 
     def test_da_2d_array_like(self):
         """
@@ -114,7 +114,7 @@ class TestScaleData(unittest.TestCase):
         """
 
         # da should be 2-D array_like
-        self._test_for_2d_array_like(fss.scaledata, 'da', self.default_params)
+        self._test_for_2d_array_like(fssa.scaledata, 'da', self.default_params)
 
     def test_da_has_l_rho_shape(self):
         """
@@ -125,7 +125,7 @@ class TestScaleData(unittest.TestCase):
         # da should have shape (rho.size, l.size)
         args = copy.deepcopy(self.default_params)
         args['da'] = np.ones(shape=(3, args['rho'].size - 1))
-        self.assertRaises(ValueError, fss.scaledata, **args)
+        self.assertRaises(ValueError, fssa.scaledata, **args)
 
     def test_da_all_positive(self):
         """
@@ -135,11 +135,11 @@ class TestScaleData(unittest.TestCase):
         # da should have only positive entries
         args = copy.deepcopy(self.default_params)
         args['da'][1, 1] = 0.
-        self.assertRaises(ValueError, fss.scaledata, **args)
+        self.assertRaises(ValueError, fssa.scaledata, **args)
 
         args = copy.deepcopy(self.default_params)
         args['da'][1, 0] = -1.
-        self.assertRaises(ValueError, fss.scaledata, **args)
+        self.assertRaises(ValueError, fssa.scaledata, **args)
 
     def test_rho_c_float(self):
         """
@@ -147,7 +147,7 @@ class TestScaleData(unittest.TestCase):
         """
 
         # rho_c should be a float
-        self._test_for_float(fss.scaledata, 'rho_c', self.default_params)
+        self._test_for_float(fssa.scaledata, 'rho_c', self.default_params)
 
     def test_rho_c_in_range(self):
         """
@@ -156,7 +156,7 @@ class TestScaleData(unittest.TestCase):
 
         args = copy.deepcopy(self.default_params)
         args['rho_c'] = args['rho'].max() + 1.
-        self.assertRaises(ValueError, fss.scaledata, **args)
+        self.assertRaises(ValueError, fssa.scaledata, **args)
 
     def test_nu_float(self):
         """
@@ -164,7 +164,7 @@ class TestScaleData(unittest.TestCase):
         """
 
         # nu should be a float
-        self._test_for_float(fss.scaledata, 'nu', self.default_params)
+        self._test_for_float(fssa.scaledata, 'nu', self.default_params)
 
     def test_zeta_float(self):
         """
@@ -172,13 +172,13 @@ class TestScaleData(unittest.TestCase):
         """
 
         # zeta should be a float
-        self._test_for_float(fss.scaledata, 'zeta', self.default_params)
+        self._test_for_float(fssa.scaledata, 'zeta', self.default_params)
 
     def test_output_len(self):
         """
         Test that function returns at least three items
         """
-        result = fss.scaledata(**self.default_params)
+        result = fssa.scaledata(**self.default_params)
         self.assertGreaterEqual(len(result), 3)
 
     def test_output_shape(self):
@@ -189,7 +189,7 @@ class TestScaleData(unittest.TestCase):
             self.default_params['l'].size,
             self.default_params['rho'].size,
         )
-        result = fss.scaledata(**self.default_params)
+        result = fssa.scaledata(**self.default_params)
         for i in range(3):
             try:  # python 3
                 with self.subTest(i=i):
@@ -206,7 +206,7 @@ class TestScaleData(unittest.TestCase):
         """
         Test that function returns namedtuple with correct field names
         """
-        result = fss.scaledata(**self.default_params)
+        result = fssa.scaledata(**self.default_params)
         fields = ['x', 'y', 'dy']
         for i in range(len(fields)):
             try:  # python 3
@@ -223,7 +223,7 @@ class TestScaleData(unittest.TestCase):
         """
         args = copy.deepcopy(self.default_params)
         args['zeta'] = 0.0
-        result = fss.scaledata(**self.default_params)
+        result = fssa.scaledata(**self.default_params)
         self.assertTrue(np.all(args['a'] == result.y))
 
     def test_values(self):
@@ -239,7 +239,7 @@ class TestScaleData(unittest.TestCase):
         a = self.default_params['a'][2, 3]
         da = self.default_params['da'][2, 3]
 
-        result = fss.scaledata(**self.default_params)
+        result = fssa.scaledata(**self.default_params)
         self.assertAlmostEqual(result.x[2, 3], l ** (1. / nu) * (rho - rho_c))
         self.assertAlmostEqual(result.y[2, 3], l ** (- zeta / nu) * a)
         self.assertAlmostEqual(result.dy[2, 3], l ** (- zeta / nu) * da)
@@ -297,8 +297,8 @@ class TestJPrimes(unittest.TestCase):
         Test for function existence
         """
         self.assertTrue(
-            hasattr(fss.fss, '_jprimes'),
-            msg='No such function: fss.fss._jprimes'
+            hasattr(fssa.fss, '_jprimes'),
+            msg='No such function: fssa.fss._jprimes'
         )
 
     def test_signature(self):
@@ -306,9 +306,9 @@ class TestJPrimes(unittest.TestCase):
         Test function signature
         """
         try:
-            args = inspect.signature(fss.fss._jprimes).parameters
+            args = inspect.signature(fssa.fss._jprimes).parameters
         except:
-            args = inspect.getargspec(fss.fss._jprimes).args
+            args = inspect.getargspec(fssa.fss._jprimes).args
 
         fields = ['x', 'i']
 
@@ -324,7 +324,7 @@ class TestJPrimes(unittest.TestCase):
         Test that the function returns an array of the same shape as x
         """
         x = np.sort(np.random.rand(4, 3))
-        ret = fss.fss._jprimes(x, 2)
+        ret = fssa.fss._jprimes(x, 2)
         self.assertTupleEqual(ret.shape, x.shape)
 
     def test_never_select_from_i(self):
@@ -332,7 +332,7 @@ class TestJPrimes(unittest.TestCase):
         Test that the mask never selects from the i row
         """
         x = np.sort(np.random.rand(4, 3))
-        ret = fss.fss._jprimes(x, 2)
+        ret = fssa.fss._jprimes(x, 2)
         self.assertTrue(np.isnan(ret[2, :]).all())
 
     def test_jprime_nan_if_xij_doesnt_fit(self):
@@ -345,7 +345,7 @@ class TestJPrimes(unittest.TestCase):
         # degenerate the i row
         x[3, :] = x[2, :]
 
-        ret = fss.fss._jprimes(x, 2)
+        ret = fssa.fss._jprimes(x, 2)
 
         for iprime in range(x.shape[0]):
             if iprime == 2:
@@ -370,7 +370,7 @@ class TestJPrimes(unittest.TestCase):
         # degenerate the i row
         x[3, :] = x[2, :]
 
-        ret = fss.fss._jprimes(x, 2)
+        ret = fssa.fss._jprimes(x, 2)
 
         for iprime in range(x.shape[0]):
             if iprime == 2:
@@ -392,7 +392,7 @@ class TestJPrimes(unittest.TestCase):
         # degenerate the i row
         x[3, :] = x[2, :]
 
-        ret = fss.fss._jprimes(x, 2)
+        ret = fssa.fss._jprimes(x, 2)
 
         for iprime in range(x.shape[0]):
             if iprime == 2:
@@ -429,8 +429,8 @@ class TestSelectMask(unittest.TestCase):
         Test for function existence
         """
         self.assertTrue(
-            hasattr(fss.fss, '_select_mask'),
-            msg='No such function: fss.fss._select_mask'
+            hasattr(fssa.fss, '_select_mask'),
+            msg='No such function: fssa.fss._select_mask'
         )
 
     def test_signature(self):
@@ -438,9 +438,9 @@ class TestSelectMask(unittest.TestCase):
         Test function signature
         """
         try:
-            args = inspect.signature(fss.fss._select_mask).parameters
+            args = inspect.signature(fssa.fss._select_mask).parameters
         except:
-            args = inspect.getargspec(fss.fss._select_mask).args
+            args = inspect.getargspec(fssa.fss._select_mask).args
 
         fields = ['j', 'j_primes']
 
@@ -456,7 +456,7 @@ class TestSelectMask(unittest.TestCase):
         Test that the function returns an array of the same shape as
         j_primes
         """
-        ret = fss.fss._select_mask(**self.default_args)
+        ret = fssa.fss._select_mask(**self.default_args)
         self.assertTupleEqual(
             ret.shape, self.default_args['j_primes'].shape
         )
@@ -466,7 +466,7 @@ class TestSelectMask(unittest.TestCase):
         Test that the function selects element (i', j') if and only if
         j_primes[i', j] == j' or j_primes[i', j] == j' - 1
         """
-        ret = fss.fss._select_mask(**self.default_args)
+        ret = fssa.fss._select_mask(**self.default_args)
         for iprime in range(self.j_primes.shape[0]):
             for jprime in range(self.j_primes.shape[1]):
                 self.assertTrue(
@@ -514,8 +514,8 @@ class TestWLSPredict(unittest.TestCase):
         Test for function existence
         """
         self.assertTrue(
-            hasattr(fss.fss, '_wls_linearfit_predict'),
-            msg='No such function: fss.fss._wls_linearfit_predict'
+            hasattr(fssa.fss, '_wls_linearfit_predict'),
+            msg='No such function: fssa.fss._wls_linearfit_predict'
         )
 
     def test_signature(self):
@@ -523,9 +523,9 @@ class TestWLSPredict(unittest.TestCase):
         Test wls function signature
         """
         try:
-            args = inspect.signature(fss.fss._wls_linearfit_predict).parameters
+            args = inspect.signature(fssa.fss._wls_linearfit_predict).parameters
         except:
-            args = inspect.getargspec(fss.fss._wls_linearfit_predict).args
+            args = inspect.getargspec(fssa.fss._wls_linearfit_predict).args
 
         fields = ['x', 'w', 'wx', 'wy', 'wxx', 'wxy', 'select']
 
@@ -540,17 +540,17 @@ class TestWLSPredict(unittest.TestCase):
         """
         Tests for correct return
         """
-        ret = fss.fss._wls_linearfit_predict(**self.default_args)
+        ret = fssa.fss._wls_linearfit_predict(**self.default_args)
         y = float(ret[0])
         dy = float(ret[1])
-        y, dy = fss.fss._wls_linearfit_predict(**self.default_args)
+        y, dy = fssa.fss._wls_linearfit_predict(**self.default_args)
         float(y), float(dy)
 
     def test_function_value(self):
         """
         Test for a concrete function value
         """
-        y, dy2 = fss.fss._wls_linearfit_predict(**self.default_args)
+        y, dy2 = fssa.fss._wls_linearfit_predict(**self.default_args)
         self.assertAlmostEqual(
             y, float(274400. / 35600. + 80000. / 35600.)
         )
@@ -570,7 +570,7 @@ class TestQuality(unittest.TestCase):
         l_mesh, rho_mesh = np.meshgrid(l, rho, indexing='ij')
         a = 1. / (1. + np.exp(- np.log10(l_mesh) * rho_mesh))
         da = np.ones_like(a) * 1e-2
-        self.scaled_data = fss.scaledata(l, rho, a, da, 0, 1, 0)
+        self.scaled_data = fssa.scaledata(l, rho, a, da, 0, 1, 0)
 
     def tearDown(self):
         pass
@@ -580,8 +580,8 @@ class TestQuality(unittest.TestCase):
         Test function call
         """
         self.assertTrue(
-            hasattr(fss, 'quality'),
-            msg='No such function: fss.quality'
+            hasattr(fssa, 'quality'),
+            msg='No such function: fssa.quality'
         )
 
     def test_signature(self):
@@ -589,9 +589,9 @@ class TestQuality(unittest.TestCase):
         Test quality function signature
         """
         try:
-            args = inspect.signature(fss.quality).parameters
+            args = inspect.signature(fssa.quality).parameters
         except:
-            args = inspect.getargspec(fss.quality).args
+            args = inspect.getargspec(fssa.quality).args
 
         fields = ['x', 'y', 'dy']
 
@@ -615,11 +615,11 @@ class TestQuality(unittest.TestCase):
             try:  # python 3
                 with self.subTest(i=i):
                     self._test_for_2d_array_like(
-                        fss.quality, i, self.scaled_data
+                        fssa.quality, i, self.scaled_data
                     )
             except:  # python 2
                 self._test_for_2d_array_like(
-                    fss.quality, i, self.scaled_data
+                    fssa.quality, i, self.scaled_data
                 )
 
     def test_args_of_same_shape(self):
@@ -633,9 +633,9 @@ class TestQuality(unittest.TestCase):
             args[i] = np.zeros(shape=(134, 23))
             try:  # python 3
                 with self.subTest(i=i):
-                    self.assertRaises(ValueError, fss.quality, *args)
+                    self.assertRaises(ValueError, fssa.quality, *args)
             except AttributeError:  # python 2
-                self.assertRaises(ValueError, fss.quality, *args)
+                self.assertRaises(ValueError, fssa.quality, *args)
 
     def test_x_sorted(self):
         """
@@ -647,7 +647,7 @@ class TestQuality(unittest.TestCase):
         # manipulate x at some dimension
         args[0][1, 3] = args[0][1, 1]
 
-        self.assertRaises(ValueError, fss.quality, *args)
+        self.assertRaises(ValueError, fssa.quality, *args)
 
     def test_zero_quality(self):
         """
@@ -662,7 +662,7 @@ class TestQuality(unittest.TestCase):
         y_array = master_curve(x_array)
         dy = 0.05
         dy_array = dy * np.ones_like(y_array)
-        ret = fss.quality(x_array, y_array, dy_array)
+        ret = fssa.quality(x_array, y_array, dy_array)
         self.assertGreaterEqual(ret, 0.)
         self.assertLess(ret, 0.1)
 
@@ -680,7 +680,7 @@ class TestQuality(unittest.TestCase):
         dy = 0.05
         dy_array = dy * np.ones_like(y_array)
         y_array += dy * np.random.randn(*y_array.shape)
-        ret = fss.quality(x_array, y_array, dy_array)
+        ret = fssa.quality(x_array, y_array, dy_array)
         self.assertGreater(ret, np.power(10, -0.5))
         self.assertLess(ret, np.power(10, 0.5))
 
@@ -736,8 +736,8 @@ class TestNelderMeadErrors(unittest.TestCase):
         Test function call
         """
         self.assertTrue(
-            hasattr(fss.fss, '_neldermead_errors'),
-            msg='No such function: fss.fss._neldermead_errors'
+            hasattr(fssa.fss, '_neldermead_errors'),
+            msg='No such function: fssa.fss._neldermead_errors'
         )
 
     def test_signature(self):
@@ -745,9 +745,9 @@ class TestNelderMeadErrors(unittest.TestCase):
         Test function signature
         """
         try:
-            args = inspect.signature(fss.fss._neldermead_errors).parameters
+            args = inspect.signature(fssa.fss._neldermead_errors).parameters
         except:
-            args = inspect.getargspec(fss.fss._neldermead_errors).args
+            args = inspect.getargspec(fssa.fss._neldermead_errors).args
 
         fields = ['sim', 'fsim', 'fun']
 
@@ -763,7 +763,7 @@ class TestNelderMeadErrors(unittest.TestCase):
         Test that the function returns the standard errors and the whole
         variance--covariance matrix
         """
-        errors, varco = fss.fss._neldermead_errors(**self.default_args)
+        errors, varco = fssa.fss._neldermead_errors(**self.default_args)
         self.assertTupleEqual(errors.shape, (self.n, ))
         self.assertTupleEqual(varco.shape, (self.n, self.n))
 
@@ -772,7 +772,7 @@ class TestNelderMeadErrors(unittest.TestCase):
         Test function returns correct errors and variance--covariance matrix for
         identity hessian (curvature)
         """
-        errors, varco = fss.fss._neldermead_errors(**self.default_args)
+        errors, varco = fssa.fss._neldermead_errors(**self.default_args)
         self.assertTrue(np.allclose(errors, np.sqrt(2. * self.ymin)))
         self.assertTrue(np.allclose(varco, 2. * self.ymin * np.eye(self.n)))
 
@@ -790,7 +790,7 @@ class TestNelderMeadErrors(unittest.TestCase):
             )
 
         args['fun'] = ellipsoidal_curvature
-        errors, varco = fss.fss._neldermead_errors(**args)
+        errors, varco = fssa.fss._neldermead_errors(**args)
         self.assertTrue(np.allclose(errors, np.sqrt(2. * self.ymin * 4. / 3.)))
         self.assertTrue(np.allclose(
             varco,
@@ -816,8 +816,8 @@ class TestNelderMead(unittest.TestCase):
         Test function call
         """
         self.assertTrue(
-            hasattr(fss.fss, '_minimize_neldermead_witherrors'),
-            msg='No such function: fss.fss._minimize_neldermead_witherrors'
+            hasattr(fssa.fss, '_minimize_neldermead_witherrors'),
+            msg='No such function: fssa.fss._minimize_neldermead_witherrors'
         )
 
     def test_signature(self):
@@ -826,11 +826,11 @@ class TestNelderMead(unittest.TestCase):
         """
         try:
             args = inspect.signature(
-                fss.fss._minimize_neldermead_witherrors
+                fssa.fss._minimize_neldermead_witherrors
             ).parameters
         except:
             args = inspect.getargspec(
-                fss.fss._minimize_neldermead_witherrors
+                fssa.fss._minimize_neldermead_witherrors
             ).args
 
         fields = ['fun', 'x0', 'args', 'callback', 'xtol', 'ftol', 'maxiter',
@@ -857,7 +857,7 @@ class TestNelderMead(unittest.TestCase):
         res_witherrors = scipy.optimize.minimize(
             scipy.optimize.rosen,
             x0,
-            method=fss.fss._minimize_neldermead_witherrors
+            method=fssa.fss._minimize_neldermead_witherrors
         )
 
         fields = ['fun', 'status', 'success', 'message']
@@ -888,10 +888,10 @@ class TestNelderMead(unittest.TestCase):
         res = scipy.optimize.minimize(
             scipy.optimize.rosen,
             x0,
-            method=fss.fss._minimize_neldermead_witherrors
+            method=fssa.fss._minimize_neldermead_witherrors
         )
 
-        errors, varco = fss.fss._neldermead_errors(
+        errors, varco = fssa.fss._neldermead_errors(
             sim=res['sim'],
             fsim=res['fsim'],
             fun=scipy.optimize.rosen
@@ -948,8 +948,8 @@ class TestAutoscale(unittest.TestCase):
         Test function call
         """
         self.assertTrue(
-            hasattr(fss, 'autoscale'),
-            msg='No such function: fss.autoscale'
+            hasattr(fssa, 'autoscale'),
+            msg='No such function: fssa.autoscale'
         )
 
     def test_signature(self):
@@ -957,9 +957,9 @@ class TestAutoscale(unittest.TestCase):
         Test function signature
         """
         try:
-            args = inspect.signature(fss.autoscale).parameters
+            args = inspect.signature(fssa.autoscale).parameters
         except:
-            args = inspect.getargspec(fss.autoscale).args
+            args = inspect.getargspec(fssa.autoscale).args
 
         fields = ['l', 'rho', 'a', 'da', 'rho_c0', 'nu0', 'zeta0']
 
@@ -974,7 +974,7 @@ class TestAutoscale(unittest.TestCase):
         """
         Test that function returns correct type
         """
-        res = fss.autoscale(**self.default_args)
+        res = fssa.autoscale(**self.default_args)
 
         fields = ['success', 'x', 'rho', 'nu', 'zeta', 'drho', 'dnu', 'dzeta',
                   'errors', 'varco']

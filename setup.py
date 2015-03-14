@@ -37,8 +37,8 @@ def setup_package():
         long_description = f.read()
 
     setup(
-        name='fss',
-        version=get_version('fss', '_version.py'),
+        name='fssa',
+        version=get_version('fssa', '_version.py'),
         description=('Finite-size scaling analysis at phase transitions'),
         long_description=long_description,
         url='http://github.com/andsor/pyfss',
@@ -68,7 +68,7 @@ def setup_package():
             '.gitignore',
         ]},
         package_data={
-            'fss': [],
+            'fssa': [],
         },
 
         setup_requires=['setuptools_git >= 1.1', ],
