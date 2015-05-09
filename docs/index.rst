@@ -1,15 +1,11 @@
-.. pyfss documentation master file, created by
-   sphinx-quickstart on Thu Aug 28 15:27:54 2014.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Welcome to pyfss's documentation!
 =================================
 
 :Release: |release|
 :Date:    |today|
 
-Contents:
+Contents
+========
 
 .. toctree::
    :maxdepth: 2

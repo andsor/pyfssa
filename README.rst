@@ -1,5 +1,6 @@
-pyfss
-=====
+======
+pyfssa
+======
 
 pyfss is a scientific Python package for finite-size scaling analysis at phase
 transitions.
