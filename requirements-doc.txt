@@ -1,4 +1,4 @@
-sphinx
+numpydoc
+sphinx<=1.2.3
 sphinx_rtd_theme
 sphinxcontrib-bibtex
-numpydoc
