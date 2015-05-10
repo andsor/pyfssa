@@ -497,18 +497,18 @@ intersphinx_mapping = {
 # custom style for sphinxcontrib-bibtex
 # http://sphinxcontrib-bibtex.readthedocs.org/en/latest/usage.html#custom-formatting-sorting-and-labelling
 
-from pybtex.style.formatting.alpha import Style as AlphaStyle
-from pybtex.style.template import optional, sentence
-from pybtex.plugin import register_plugin
+# from pybtex.style.formatting.alpha import Style as AlphaStyle
+# from pybtex.style.template import optional, sentence
+# from pybtex.plugin import register_plugin
 
-class NoURLStyle(AlphaStyle):
+# class NoURLStyle(AlphaStyle):
 
-    def format_web_refs(self, e):
+#    def format_web_refs(self, e):
         # based on urlbst output.web.refs
-        return sentence(capfirst=False) [
-            optional [ self.format_eprint(e) ],
-            optional [ self.format_pubmed(e) ],
-            optional [ self.format_doi(e) ],
-            ]
+#        return sentence(capfirst=False) [
+#            optional [ self.format_eprint(e) ],
+#            optional [ self.format_pubmed(e) ],
+#            optional [ self.format_doi(e) ],
+#            ]
 
-register_plugin('pybtex.style.formatting', 'alpha-nourls', NoURLStyle)
+# register_plugin('pybtex.style.formatting', 'alpha-nourls', NoURLStyle)

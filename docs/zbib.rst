@@ -5,4 +5,3 @@
 
 .. bibliography:: pyfssa.bib
    :all:
-   :style: alpha-nourls
