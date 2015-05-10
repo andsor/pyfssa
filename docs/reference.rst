@@ -1,8 +1,8 @@
-API Reference
-=============
+Reference
+=========
 
-.. autosummary::
-   :toctree: _autosummary
-   
-   fssa.fss
+.. toctree::
+   :maxdepth: 1
 
+   reference-fssa
+   reference-fssa-fssa

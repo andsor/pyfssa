@@ -1,27 +1,19 @@
-Welcome to pyfss's documentation!
-=================================
+==================
+Welcome to pyfssa!
+==================
 
-:Release: |release|
-:Date:    |today|
+.. only:: not latex
 
-Contents
-========
+   .. include:: about-include.rst
 
 .. toctree::
    :maxdepth: 2
 
-   readme
-   fss-theory
-   quality
-   nelder-mead
+   About <about>
+   Setup <setup>
+   Tutorial <tutorial>
+   User Guide <user>
+   Developer Guide <developer>
    reference
-   license
    zbib
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 

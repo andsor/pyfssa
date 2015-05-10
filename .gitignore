@@ -86,3 +86,4 @@ docs/_build/*
 cover/*
 MANIFEST
 .devenv*
+.doit.db

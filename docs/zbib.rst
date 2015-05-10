@@ -3,6 +3,6 @@
    References
    ==========
 
-.. bibliography:: pyfss.bib
+.. bibliography:: pyfssa.bib
    :all:
    :style: alpha-nourls
