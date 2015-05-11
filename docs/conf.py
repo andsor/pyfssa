@@ -9,12 +9,13 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys
-import os
 import inspect
-from sphinx import apidoc
-import alabaster
+import os
+import sys
+from collections import OrderedDict
 
+import alabaster
+from sphinx import apidoc
 
 __location__ = os.path.join(os.getcwd(), os.path.dirname(
     inspect.getfile(inspect.currentframe())))
@@ -138,7 +139,6 @@ pygments_style = 'sphinx'
 # a list of builtin themes.
 html_theme = 'alabaster'
 
-from collections import OrderedDict
 extra_nav_links = OrderedDict()
 for key, value in [
     ('Package (PyPI)', 'http://pypi.python.org/pypi/fssa'),
