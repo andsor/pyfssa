@@ -1,8 +1,6 @@
 **pyfssa** is a scientific Python package for algorithmic finite-size
 scaling analysis at phase transitions.
 
-`Package (Download)`_ | `Development`_ | `Issues`_ | `Bibliography`_
-
 |today| (Version |release|)
 
 Andreas Sorge <pyfssa@asorge.de>

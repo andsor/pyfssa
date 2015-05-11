@@ -1,7 +1,7 @@
 .. only:: html
 
-   References
-   ==========
+   Bibliography
+   ============
 
 .. bibliography:: pyfssa.bib
    :all:

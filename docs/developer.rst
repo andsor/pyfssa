@@ -2,7 +2,6 @@ Developer Guide
 ===============
 
 * **Repository**: `github.com/andsor/pyfssa <http://github.com/andsor/pyfssa>`_
-* **Read the Docs**: `readthedocs.org/projects/pyfssa <https://readthedocs.org/projects/pyfssa>`_
 * **Bibliography**: `www.citeulike.org/group/19073 <http://www.citeulike.org/group/19073>`_
 
 Development environment
@@ -80,15 +79,23 @@ Add further options separated from tox options by a double dash ``--``::
 Start editing the file `docs/index.rst <docs/index.rst>`_ to extend the
 documentation.
 
-`Read the Docs`_ hosts the project at
-https://readthedocs.org/projects/pyfssa. 
-
-.. _Read the Docs:  http://readthedocs.org/
-
 Add `requirements`_ for building the documentation to the
 `requirements-doc.txt <doc-requirements-doc.txt>`_ file.
 
 .. _requirements: http://pip.readthedocs.org/en/latest/user_guide.html#requirements-files
+
+Uploading documentation to GitHub pages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Run::
+
+   $ ghp-import -n -p docs/_build/html
+
+or::
+
+   $ doit upload_doc
+
+to upload the built HTML documentation to GitHub pages.   
 
 Continuous documentation building
 ---------------------------------
