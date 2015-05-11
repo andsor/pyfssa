@@ -499,7 +499,7 @@ def setup_package():
     metadata, console_scripts, extras_require, data_files = read_setup_cfg()
 
     command_options = {
-        'docs': {'project': ('setup.py', package),
+        'docs': {'project': ('setup.py', 'pyfssa'),
                  'version': ('setup.py', version.split('-', 1)[0]),
                  'release': ('setup.py', version),
                  'build_dir': ('setup.py', docs_build_path),
