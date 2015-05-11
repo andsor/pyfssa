@@ -1,53 +1,30 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-# Copyright 2014 Max Planck Society, Andreas Sorge
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#    http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+r"""
+Low-level routines for finite-size scaling analysis
 
-"""
-Routines for finite-size scaling analyses
+See Also
+--------
+
+fssa : The high-level module
+
+Notes
+-----
 
 The **fssa** package provides routines to perform finite-size scaling analyses
-on experimental data [1]_ [2]_.
+on experimental data [10]_ [11]_.
 
 It has been inspired by Oliver Melchert and his superb **autoScale** package
 [3]_.
 
-Routines
---------
-
-.. autosummary::
-   :nosignatures:
-
-   quality
-   scaledata
-   autoscale
-
-Classes
--------
-
-.. autosummary::
-
-   ScaledData
-
 References
 ----------
 
-.. [1] M. E. J. Newman and G. T. Barkema, Monte Carlo Methods in Statistical
+.. [10] M. E. J. Newman and G. T. Barkema, Monte Carlo Methods in Statistical
    Physics (Oxford University Press, 1999)
 
-.. [2] K. Binder and D. W. Heermann, `Monte Carlo Simulation in Statistical
+.. [11] K. Binder and D. W. Heermann, `Monte Carlo Simulation in Statistical
    Physics <http://dx.doi.org/10.1007/978-3-642-03163-2>`_ (Springer, Berlin,
    Heidelberg, 2010)
 
@@ -57,17 +34,16 @@ References
 """
 
 # Python 2/3 compatibility
-from __future__ import (absolute_import, division,
-                        print_function, unicode_literals)
-from builtins import *
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
 
-import numpy as np
+from builtins import *
 from collections import namedtuple
 
+import numpy as np
 import scipy.optimize
-from scipy.optimize.optimize import (
-    wrap_function, _status_message, OptimizeResult
-)
+from scipy.optimize.optimize import (OptimizeResult, _status_message,
+                                     wrap_function)
 
 
 class ScaledData(namedtuple('ScaledData', ['x', 'y', 'dy'])):
@@ -130,7 +106,7 @@ def scaledata(l, rho, a, da, rho_c, nu, zeta):
 
     such that all data points :ref:`collapse <data-collapse-method>` onto the
     single curve :math:`\tilde{f}(x)` with the right choice of :math:`\varrho_c,
-    \nu, \zeta` [1]_ [2]_.
+    \nu, \zeta` [4]_ [5]_.
 
     Raises
     ------
@@ -143,10 +119,10 @@ def scaledata(l, rho, a, da, rho_c, nu, zeta):
     References
     ----------
 
-    .. [1] M. E. J. Newman and G. T. Barkema, Monte Carlo Methods in Statistical
+    .. [4] M. E. J. Newman and G. T. Barkema, Monte Carlo Methods in Statistical
        Physics (Oxford University Press, 1999)
 
-    .. [2] K. Binder and D. W. Heermann, `Monte Carlo Simulation in Statistical
+    .. [5] K. Binder and D. W. Heermann, `Monte Carlo Simulation in Statistical
        Physics <http://dx.doi.org/10.1007/978-3-642-03163-2>`_ (Springer,
        Berlin, Heidelberg, 2010)
     '''
@@ -358,7 +334,7 @@ def quality(x, y, dy):
     Notes
     -----
     This is the implementation of the reduced :math:`\chi^2` quality function
-    :math:`S` by Houdayer & Hartmann [1]_.
+    :math:`S` by Houdayer & Hartmann [6]_.
     It should attain a minimum of around :math:`1` for an optimal fit, and be
     much larger otherwise.
 
@@ -367,7 +343,7 @@ def quality(x, y, dy):
 
     References
     ----------
-    .. [1] J. Houdayer and A. Hartmann, Physical Review B 70, 014418+ (2004)
+    .. [6] J. Houdayer and A. Hartmann, Physical Review B 70, 014418+ (2004)
         `doi:10.1103/physrevb.70.014418
         <http://dx.doi.org/doi:10.1103/physrevb.70.014418>`_
 
@@ -540,7 +516,7 @@ def _minimize_neldermead_witherrors(
     -----
     Adapted from the original
     :py:func:`scipy.optimize.optimize._minimize_neldermead` function to include
-    errors according to [1]_
+    errors according to [7]_
     Note that the errors are calculated for minimizing the reduced chi-square
     statistic!
 
@@ -553,7 +529,7 @@ def _minimize_neldermead_witherrors(
 
     References
     ----------
-    .. [1] J. A. Nelder and R. Mead, The Computer Journal 7, 308 (1965),
+    .. [7] J. A. Nelder and R. Mead, The Computer Journal 7, 308 (1965),
        `doi:10.1093/comjnl/7.4.308 <http://dx.doi.org/10.1093/comjnl/7.4.308>`_
 
     """
@@ -752,12 +728,12 @@ def autoscale(l, rho, a, da, rho_c0, nu0, zeta0, **kwargs):
 
     Notes
     -----
-    This implementation uses the quality function by Houdayer & Hartmann [1]_
+    This implementation uses the quality function by Houdayer & Hartmann [8]_
     which measures the quality of the data collapse, see the sections
     :ref:`data-collapse-method` and :ref:`quality-function` in the manual.
 
     This function and the whole fssa package have been inspired by Oliver
-    Melchert and his superb **autoScale** package [2]_.
+    Melchert and his superb **autoScale** package [9]_.
 
     The critical point and exponents, including its standard errors and
     (co)variances, are fitted by the Nelder--Mead algorithm, see the section
@@ -765,11 +741,11 @@ def autoscale(l, rho, a, da, rho_c0, nu0, zeta0, **kwargs):
 
     References
     ----------
-    .. [1] J. Houdayer and A. Hartmann, Physical Review B 70, 014418+ (2004)
+    .. [8] J. Houdayer and A. Hartmann, Physical Review B 70, 014418+ (2004)
         `doi:10.1103/physrevb.70.014418
         <http://dx.doi.org/doi:10.1103/physrevb.70.014418>`_
 
-    .. [2] O. Melchert, `arXiv:0910.5403 <http://arxiv.org/abs/0910.5403>`_
+    .. [9] O. Melchert, `arXiv:0910.5403 <http://arxiv.org/abs/0910.5403>`_
        (2009)
 
     Examples
