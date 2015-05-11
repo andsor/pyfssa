@@ -43,7 +43,6 @@ apidoc.main(cmd_line.split(" "))
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'numpydoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.doctest',
     'sphinx.ext.intersphinx',
@@ -52,6 +51,7 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
+    'sphinx.ext.napoleon',
     'sphinxcontrib.bibtex',
     'releases',
 ]

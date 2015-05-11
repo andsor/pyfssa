@@ -1,6 +1,4 @@
 -r requirements.txt
-numpydoc
 releases
-sphinx<=1.2.3
-sphinx_rtd_theme
+sphinx>=1.3
 sphinxcontrib-bibtex
