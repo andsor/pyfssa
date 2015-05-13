@@ -15,13 +15,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import unittest
-import inspect
-import numpy as np
-import scipy.optimize
 import copy
+import inspect
+import unittest
 
 import fssa
+import numpy as np
+import scipy.optimize
 
 
 class TestScaleData(unittest.TestCase):
@@ -297,8 +297,8 @@ class TestJPrimes(unittest.TestCase):
         Test for function existence
         """
         self.assertTrue(
-            hasattr(fssa.fss, '_jprimes'),
-            msg='No such function: fssa.fss._jprimes'
+            hasattr(fssa.fssa, '_jprimes'),
+            msg='No such function: fssa.fssa.._jprimes'
         )
 
     def test_signature(self):
@@ -306,9 +306,9 @@ class TestJPrimes(unittest.TestCase):
         Test function signature
         """
         try:
-            args = inspect.signature(fssa.fss._jprimes).parameters
+            args = inspect.signature(fssa.fssa._jprimes).parameters
         except:
-            args = inspect.getargspec(fssa.fss._jprimes).args
+            args = inspect.getargspec(fssa.fssa._jprimes).args
 
         fields = ['x', 'i']
 
@@ -324,7 +324,7 @@ class TestJPrimes(unittest.TestCase):
         Test that the function returns an array of the same shape as x
         """
         x = np.sort(np.random.rand(4, 3))
-        ret = fssa.fss._jprimes(x, 2)
+        ret = fssa.fssa._jprimes(x, 2)
         self.assertTupleEqual(ret.shape, x.shape)
 
     def test_never_select_from_i(self):
@@ -332,7 +332,7 @@ class TestJPrimes(unittest.TestCase):
         Test that the mask never selects from the i row
         """
         x = np.sort(np.random.rand(4, 3))
-        ret = fssa.fss._jprimes(x, 2)
+        ret = fssa.fssa._jprimes(x, 2)
         self.assertTrue(np.isnan(ret[2, :]).all())
 
     def test_jprime_nan_if_xij_doesnt_fit(self):
@@ -345,7 +345,7 @@ class TestJPrimes(unittest.TestCase):
         # degenerate the i row
         x[3, :] = x[2, :]
 
-        ret = fssa.fss._jprimes(x, 2)
+        ret = fssa.fssa._jprimes(x, 2)
 
         for iprime in range(x.shape[0]):
             if iprime == 2:
@@ -370,7 +370,7 @@ class TestJPrimes(unittest.TestCase):
         # degenerate the i row
         x[3, :] = x[2, :]
 
-        ret = fssa.fss._jprimes(x, 2)
+        ret = fssa.fssa._jprimes(x, 2)
 
         for iprime in range(x.shape[0]):
             if iprime == 2:
@@ -392,7 +392,7 @@ class TestJPrimes(unittest.TestCase):
         # degenerate the i row
         x[3, :] = x[2, :]
 
-        ret = fssa.fss._jprimes(x, 2)
+        ret = fssa.fssa._jprimes(x, 2)
 
         for iprime in range(x.shape[0]):
             if iprime == 2:
@@ -429,8 +429,8 @@ class TestSelectMask(unittest.TestCase):
         Test for function existence
         """
         self.assertTrue(
-            hasattr(fssa.fss, '_select_mask'),
-            msg='No such function: fssa.fss._select_mask'
+            hasattr(fssa.fssa, '_select_mask'),
+            msg='No such function: fssa.fssa._select_mask'
         )
 
     def test_signature(self):
@@ -438,9 +438,9 @@ class TestSelectMask(unittest.TestCase):
         Test function signature
         """
         try:
-            args = inspect.signature(fssa.fss._select_mask).parameters
+            args = inspect.signature(fssa.fssa._select_mask).parameters
         except:
-            args = inspect.getargspec(fssa.fss._select_mask).args
+            args = inspect.getargspec(fssa.fssa._select_mask).args
 
         fields = ['j', 'j_primes']
 
@@ -456,7 +456,7 @@ class TestSelectMask(unittest.TestCase):
         Test that the function returns an array of the same shape as
         j_primes
         """
-        ret = fssa.fss._select_mask(**self.default_args)
+        ret = fssa.fssa._select_mask(**self.default_args)
         self.assertTupleEqual(
             ret.shape, self.default_args['j_primes'].shape
         )
@@ -466,7 +466,7 @@ class TestSelectMask(unittest.TestCase):
         Test that the function selects element (i', j') if and only if
         j_primes[i', j] == j' or j_primes[i', j] == j' - 1
         """
-        ret = fssa.fss._select_mask(**self.default_args)
+        ret = fssa.fssa._select_mask(**self.default_args)
         for iprime in range(self.j_primes.shape[0]):
             for jprime in range(self.j_primes.shape[1]):
                 self.assertTrue(
@@ -514,8 +514,8 @@ class TestWLSPredict(unittest.TestCase):
         Test for function existence
         """
         self.assertTrue(
-            hasattr(fssa.fss, '_wls_linearfit_predict'),
-            msg='No such function: fssa.fss._wls_linearfit_predict'
+            hasattr(fssa.fssa, '_wls_linearfit_predict'),
+            msg='No such function: fssa.fssa._wls_linearfit_predict'
         )
 
     def test_signature(self):
@@ -523,9 +523,9 @@ class TestWLSPredict(unittest.TestCase):
         Test wls function signature
         """
         try:
-            args = inspect.signature(fssa.fss._wls_linearfit_predict).parameters
+            args = inspect.signature(fssa.fssa._wls_linearfit_predict).parameters
         except:
-            args = inspect.getargspec(fssa.fss._wls_linearfit_predict).args
+            args = inspect.getargspec(fssa.fssa._wls_linearfit_predict).args
 
         fields = ['x', 'w', 'wx', 'wy', 'wxx', 'wxy', 'select']
 
@@ -540,17 +540,17 @@ class TestWLSPredict(unittest.TestCase):
         """
         Tests for correct return
         """
-        ret = fssa.fss._wls_linearfit_predict(**self.default_args)
+        ret = fssa.fssa._wls_linearfit_predict(**self.default_args)
         y = float(ret[0])
         dy = float(ret[1])
-        y, dy = fssa.fss._wls_linearfit_predict(**self.default_args)
+        y, dy = fssa.fssa._wls_linearfit_predict(**self.default_args)
         float(y), float(dy)
 
     def test_function_value(self):
         """
         Test for a concrete function value
         """
-        y, dy2 = fssa.fss._wls_linearfit_predict(**self.default_args)
+        y, dy2 = fssa.fssa._wls_linearfit_predict(**self.default_args)
         self.assertAlmostEqual(
             y, float(274400. / 35600. + 80000. / 35600.)
         )
@@ -736,8 +736,8 @@ class TestNelderMeadErrors(unittest.TestCase):
         Test function call
         """
         self.assertTrue(
-            hasattr(fssa.fss, '_neldermead_errors'),
-            msg='No such function: fssa.fss._neldermead_errors'
+            hasattr(fssa.fssa, '_neldermead_errors'),
+            msg='No such function: fssa.fssa._neldermead_errors'
         )
 
     def test_signature(self):
@@ -745,9 +745,9 @@ class TestNelderMeadErrors(unittest.TestCase):
         Test function signature
         """
         try:
-            args = inspect.signature(fssa.fss._neldermead_errors).parameters
+            args = inspect.signature(fssa.fssa._neldermead_errors).parameters
         except:
-            args = inspect.getargspec(fssa.fss._neldermead_errors).args
+            args = inspect.getargspec(fssa.fssa._neldermead_errors).args
 
         fields = ['sim', 'fsim', 'fun']
 
@@ -763,7 +763,7 @@ class TestNelderMeadErrors(unittest.TestCase):
         Test that the function returns the standard errors and the whole
         variance--covariance matrix
         """
-        errors, varco = fssa.fss._neldermead_errors(**self.default_args)
+        errors, varco = fssa.fssa._neldermead_errors(**self.default_args)
         self.assertTupleEqual(errors.shape, (self.n, ))
         self.assertTupleEqual(varco.shape, (self.n, self.n))
 
@@ -772,7 +772,7 @@ class TestNelderMeadErrors(unittest.TestCase):
         Test function returns correct errors and variance--covariance matrix for
         identity hessian (curvature)
         """
-        errors, varco = fssa.fss._neldermead_errors(**self.default_args)
+        errors, varco = fssa.fssa._neldermead_errors(**self.default_args)
         self.assertTrue(np.allclose(errors, np.sqrt(2. * self.ymin)))
         self.assertTrue(np.allclose(varco, 2. * self.ymin * np.eye(self.n)))
 
@@ -790,7 +790,7 @@ class TestNelderMeadErrors(unittest.TestCase):
             )
 
         args['fun'] = ellipsoidal_curvature
-        errors, varco = fssa.fss._neldermead_errors(**args)
+        errors, varco = fssa.fssa._neldermead_errors(**args)
         self.assertTrue(np.allclose(errors, np.sqrt(2. * self.ymin * 4. / 3.)))
         self.assertTrue(np.allclose(
             varco,
@@ -816,8 +816,8 @@ class TestNelderMead(unittest.TestCase):
         Test function call
         """
         self.assertTrue(
-            hasattr(fssa.fss, '_minimize_neldermead_witherrors'),
-            msg='No such function: fssa.fss._minimize_neldermead_witherrors'
+            hasattr(fssa.fssa, '_minimize_neldermead_witherrors'),
+            msg='No such function: fssa.fssa._minimize_neldermead_witherrors'
         )
 
     def test_signature(self):
@@ -826,11 +826,11 @@ class TestNelderMead(unittest.TestCase):
         """
         try:
             args = inspect.signature(
-                fssa.fss._minimize_neldermead_witherrors
+                fssa.fssa._minimize_neldermead_witherrors
             ).parameters
         except:
             args = inspect.getargspec(
-                fssa.fss._minimize_neldermead_witherrors
+                fssa.fssa._minimize_neldermead_witherrors
             ).args
 
         fields = ['fun', 'x0', 'args', 'callback', 'xtol', 'ftol', 'maxiter',
@@ -857,7 +857,7 @@ class TestNelderMead(unittest.TestCase):
         res_witherrors = scipy.optimize.minimize(
             scipy.optimize.rosen,
             x0,
-            method=fssa.fss._minimize_neldermead_witherrors
+            method=fssa.fssa._minimize_neldermead_witherrors
         )
 
         fields = ['fun', 'status', 'success', 'message']
@@ -888,10 +888,10 @@ class TestNelderMead(unittest.TestCase):
         res = scipy.optimize.minimize(
             scipy.optimize.rosen,
             x0,
-            method=fssa.fss._minimize_neldermead_witherrors
+            method=fssa.fssa._minimize_neldermead_witherrors
         )
 
-        errors, varco = fssa.fss._neldermead_errors(
+        errors, varco = fssa.fssa._neldermead_errors(
             sim=res['sim'],
             fsim=res['fsim'],
             fun=scipy.optimize.rosen
