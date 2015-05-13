@@ -11,6 +11,7 @@
 
 import inspect
 import os
+import subprocess
 import sys
 from collections import OrderedDict
 
@@ -29,6 +30,12 @@ module_dir = os.path.join(__location__, "..", root_pkg)
 cmd_line_template = "sphinx-apidoc -f -o {outputdir} {moduledir}"
 cmd_line = cmd_line_template.format(outputdir=output_dir, moduledir=module_dir)
 apidoc.main(cmd_line.split(" "))
+
+
+subprocess.call(
+    "ipython nbconvert --to rst tutorial.ipynb",
+    shell=True
+)
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
