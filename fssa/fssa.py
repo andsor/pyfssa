@@ -692,7 +692,7 @@ def _minimize_neldermead_witherrors(
     return result
 
 
-def autoscale(l, rho, a, da, rho_c0, nu0, zeta0, **kwargs):
+def autoscale(l, rho, a, da, rho_c0, nu0, zeta0, x_bounds=None, **kwargs):
     """
     Automatically scale finite-size data and fit critical point and exponents
 
@@ -703,6 +703,9 @@ def autoscale(l, rho, a, da, rho_c0, nu0, zeta0, **kwargs):
 
     rho_c0, nu0, zeta0 : float
         initial guesses for the critical point and exponents
+
+    x_bounds : tuple of floats, optional
+        lower and upper bound for scaled data `x` to consider
 
     Returns
     -------
@@ -808,9 +811,12 @@ def autoscale(l, rho, a, da, rho_c0, nu0, zeta0, **kwargs):
     """
 
     def goal_function(x):
-        return quality(*scaledata(
-            rho=rho, l=l, a=a, da=da, nu=x[1], zeta=x[2], rho_c=x[0]
-        ))
+        my_x, my_y, my_dy = scaledata(
+            rho=rho, l=l, a=a, da=da, nu=x[1], zeta=x[2], rho_c=x[0],
+        )
+        return quality(
+            my_x, my_y, my_dy, x_bounds=x_bounds,
+        )
 
     ret = scipy.optimize.minimize(
         goal_function,

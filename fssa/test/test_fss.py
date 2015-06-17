@@ -820,11 +820,62 @@ class TestQuality(unittest.TestCase):
             [0.5, 1.5, 2.5],
             [-0.25, 0.25, 0.75],
         ])
-        y = x
+        y = x.copy()
         dy = 0.05 * np.ones_like(y)
 
         ret = fssa.quality(x, y, dy)
         self.assertEqual(ret, 0.0)
+
+    def test_linear_quality_fail(self):
+        x = np.array([
+            [0.0, 1.0, 2.0],
+            [0.5, 1.5, 2.5],
+            [-0.25, 0.25, 0.75],
+        ])
+        y = x.copy()
+        y[1, 1] = 1.0
+        dy = 0.05 * np.ones_like(y)
+
+        ret = fssa.quality(x, y, dy)
+        self.assertGreater(ret, 0.0)
+
+    def test_linear_quality_x_bounds(self):
+        x = np.array([
+            [0.0, 1.0, 2.0],
+            [0.5, 1.5, 2.5],
+            [-0.25, 0.25, 0.75],
+        ])
+        y = x.copy()
+        dy = 0.05 * np.ones_like(y)
+
+        ret = fssa.quality(x, y, dy, x_bounds=(0.3, 2.3))
+        self.assertEqual(ret, 0.0)
+
+    def test_linear_quality_x_bounds_omits(self):
+        x = np.array([
+            [0.0, 1.0, 2.0],
+            [0.5, 1.5, 2.5],
+            [-0.25, 0.25, 0.75],
+        ])
+        y = x.copy()
+        y[2, 1] = 0.0
+        dy = 0.05 * np.ones_like(y)
+
+        ret = fssa.quality(x, y, dy, x_bounds=(0.3, 2.3))
+        self.assertEqual(ret, 0.0)
+
+    def test_linear_quality_fails_x_bounds(self):
+        x = np.array([
+            [0.0, 1.0, 2.0],
+            [0.5, 1.5, 2.5],
+            [-0.25, 0.25, 0.75],
+        ])
+        y = x.copy()
+        y[1, 1] = 1.0
+        dy = 0.05 * np.ones_like(y)
+
+        ret = fssa.quality(x, y, dy, x_bounds=(0.3, 2.3))
+        self.assertGreater(ret, 0.0)
 
 
 class TestNelderMeadErrors(unittest.TestCase):
