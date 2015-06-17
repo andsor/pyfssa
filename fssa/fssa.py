@@ -41,6 +41,7 @@ from builtins import *
 from collections import namedtuple
 
 import numpy as np
+import numpy.ma as ma
 import scipy.optimize
 from scipy.optimize.optimize import (OptimizeResult, _status_message,
                                      wrap_function)
@@ -48,7 +49,8 @@ from scipy.optimize.optimize import (OptimizeResult, _status_message,
 
 class ScaledData(namedtuple('ScaledData', ['x', 'y', 'dy'])):
     """
-    A :py:func:`namedtuple <collections.namedtuple>` for :py:func:`scaledata` output
+    A :py:func:`namedtuple <collections.namedtuple>` for :py:func:`scaledata`
+    output
     """
 
     # set this to keep memory requirements low, according to
@@ -66,13 +68,13 @@ def scaledata(l, rho, a, da, rho_c, nu, zeta):
        finite system sizes `l` and parameter values `rho`
 
     a, da : 2-D array_like of shape (`l`.size, `rho`.size)
-       experimental data `a` with standard errors `da` obtained at finite system
-       sizes `l` and parameter values `rho`, with
+       experimental data `a` with standard errors `da` obtained at finite
+       system sizes `l` and parameter values `rho`, with
        ``a.shape == da.shape == (l.size, rho.size)``
 
     rho_c : float in range [rho.min(), rho.max()]
-       (assumed) critical parameter value with ``rho_c >= rho.min() and rho_c <=
-       rho.max()``
+       (assumed) critical parameter value with ``rho_c >= rho.min() and rho_c
+       <= rho.max()``
 
     nu, zeta : float
        (assumed) critical exponents
@@ -88,13 +90,13 @@ def scaledata(l, rho, a, da, rho_c, nu, zeta):
     Notes
     -----
     Scale data points :math:`(\varrho_j, a_{ij}, da_{ij})` observed at finite
-    system sizes :math:`L_i` and parameter values :math:`\varrho_i` according to
-    the finite-size scaling ansatz
+    system sizes :math:`L_i` and parameter values :math:`\varrho_i` according
+    to the finite-size scaling ansatz
 
     .. math::
 
-       L^{-\zeta/\nu} a_{ij} = \tilde{f}\left( L^{1/\nu} (\varrho_j - \varrho_c)
-       \right).
+       L^{-\zeta/\nu} a_{ij} = \tilde{f}\left( L^{1/\nu} (\varrho_j -
+       \varrho_c) \right).
 
     The output is the scaled data points :math:`(x_{ij}, y_{ij}, dy_{ij})` with
 
@@ -105,8 +107,8 @@ def scaledata(l, rho, a, da, rho_c, nu, zeta):
        dy_{ij} & = L_i^{-\zeta/\nu} da_{ij}
 
     such that all data points :ref:`collapse <data-collapse-method>` onto the
-    single curve :math:`\tilde{f}(x)` with the right choice of :math:`\varrho_c,
-    \nu, \zeta` [4]_ [5]_.
+    single curve :math:`\tilde{f}(x)` with the right choice of
+    :math:`\varrho_c, \nu, \zeta` [4]_ [5]_.
 
     Raises
     ------
@@ -119,8 +121,8 @@ def scaledata(l, rho, a, da, rho_c, nu, zeta):
     References
     ----------
 
-    .. [4] M. E. J. Newman and G. T. Barkema, Monte Carlo Methods in Statistical
-       Physics (Oxford University Press, 1999)
+    .. [4] M. E. J. Newman and G. T. Barkema, Monte Carlo Methods in
+       Statistical Physics (Oxford University Press, 1999)
 
     .. [5] K. Binder and D. W. Heermann, `Monte Carlo Simulation in Statistical
        Physics <http://dx.doi.org/10.1007/978-3-642-03163-2>`_ (Springer,
@@ -183,7 +185,8 @@ def scaledata(l, rho, a, da, rho_c, nu, zeta):
 
 def _wls_linearfit_predict(x, w, wx, wy, wxx, wxy, select):
     """
-    Predict a point according to a weighted least squares linear fit of the data
+    Predict a point according to a weighted least squares linear fit of the
+    data
 
     This function is a helper function for :py:func:`quality`. It is not
     supposed to be called directly.
@@ -238,7 +241,7 @@ def _wls_linearfit_predict(x, w, wx, wy, wxx, wxy, select):
     return y, dy2
 
 
-def _jprimes(x, i):
+def _jprimes(x, i, xbounds=None):
     """
     Helper function to return the j' indices for the master curve fit
 
@@ -247,41 +250,55 @@ def _jprimes(x, i):
 
     Parameters
     ----------
-    x : 2-D ndarray
-        The x values
+    x : mapping to ndarrays
+        The x values.
 
     i : int
-        The column index (finite size index)
+        The row index (finite size index)
+
+    xbounds : 2-tuple, optional
+        bounds on x values
 
     Returns
     -------
-    2-D ndarray of floats
-        Has the same shape as `x`. Its element with index (i', j) is the j'
-        such that :math:`x_{i'j'} \leq x_{ij} < x_{i'(j'+1)}`. If no such j'
-        exists, the element is np.nan. Convert the element to int to use as
-        an index.
+    ret : mapping to ndarrays
+        Has the same keys and shape as `x`.
+        Its element ``ret[i'][j]`` is the j' such that :math:`x_{i'j'} \leq
+        x_{ij} < x_{i'(j'+1)}`.
+        If no such j' exists, the element is np.nan.
+        Convert the element to int to use as an index.
     """
-    ret = np.zeros_like(x)
-    ret[:] = np.nan
+
     j_primes = - np.ones_like(x)
+
+    try:
+        x_masked = ma.masked_outside(x, xbounds[0], xbounds[1])
+    except (TypeError, IndexError):
+        x_masked = ma.asanyarray(x)
+
+    # indices of lower and upper bounds
+    edges = ma.notmasked_edges(x_masked, axis=1)
+    x_lower = edges[0][-1]
+    x_upper = edges[-1][-1]
 
     k, n = x.shape
     for i_prime in range(k):
         if i_prime == i:
+            j_primes[i_prime][:] = np.nan
             continue
 
-        j_primes[i_prime, :] = (
-            np.searchsorted(
-                x[i_prime, :], x[i, :], side='right'
-            ) - 1
-        )
+        jprimes = np.searchsorted(
+            x[i_prime], x[i], side='right'
+        ).astype(float) - 1
+        jprimes[
+            np.logical_or(
+                jprimes < x_lower[i_prime],
+                jprimes >= x_upper[i_prime]
+            )
+        ] = np.nan
+        j_primes[i_prime][:] = jprimes
 
-    # boolean mask for valid values of j'
-    j_primes_mask = np.logical_and(j_primes >= 0, j_primes < n - 1)
-
-    ret[j_primes_mask] = j_primes[j_primes_mask]
-
-    return ret
+    return j_primes
 
 
 def _select_mask(j, j_primes):
@@ -307,7 +324,7 @@ def _select_mask(j, j_primes):
     return ret
 
 
-def quality(x, y, dy):
+def quality(x, y, dy, x_bounds=None):
     r'''
     Quality of data collapse onto a master curve defined by the data
 
@@ -319,6 +336,9 @@ def quality(x, y, dy):
     x, y, dy : 2-D array_like
         output from :py:func:`scaledata`, scaled data `x`, `y` with standard
         errors `dy`
+
+    x_bounds : tuple of floats, optional
+        lower and upper bound for scaled data `x` to consider
 
     Returns
     -------
@@ -384,11 +404,22 @@ def quality(x, y, dy):
     master_dy2 = np.zeros_like(dy)
     master_dy2[:] = np.nan
 
+    # FIXME apply mask on x
+    if x_bounds is not None:
+        x = ma.masked_outside(x, x_bounds[0], x_bounds[1])
+
+    # loop through system sizes
     for i in range(k):
 
         j_primes = _jprimes(x=x, i=i)
 
+        # loop through x values
         for j in range(n):
+
+            # discard x value if it is out of bounds
+            if x_bounds is not None:
+                if not x_bounds[0] <= x[i, j] <= x_bounds[1]:
+                    continue
 
             # boolean mask for selected data x_l, y_l, dy_l
             select = _select_mask(j=j, j_primes=j_primes)
@@ -435,8 +466,8 @@ def _neldermead_errors(sim, fsim, fun):
     centroid = np.mean(sim, axis=0)
     fcentroid = fun(centroid)
 
-    # enlarge distance of simplex vertices from centroid until all have at least
-    # an absolute function value distance of 0.1
+    # enlarge distance of simplex vertices from centroid until all have at
+    # least an absolute function value distance of 0.1
     for i in range(n + 1):
         while np.abs(fsim[i] - fcentroid) < 0.01:
             sim[i] += sim[i] - centroid
@@ -448,11 +479,6 @@ def _neldermead_errors(sim, fsim, fun):
         + sim[np.mgrid[0:n+1, 0:n+1]][0]
     )
 
-    #for i in range(n + 1):
-    #    assert(np.array_equal(x[i,i], sim[i]))
-    #for j in range(n + 1):
-    #        assert(np.array_equal(x[i,j], 0.5 * (sim[i] + sim[j])))
-
     y = np.nan * np.ones(shape=(n + 1, n + 1))
     for i in range(n + 1):
         y[i, i] = fsim[i]
@@ -460,27 +486,12 @@ def _neldermead_errors(sim, fsim, fun):
             y[i, j] = y[j, i] = fun(x[i, j])
 
     y0i = y[np.mgrid[0:n+1, 0:n+1]][0][1:, 1:, 0]
-    #for i in range(n):
-    #    for j in range(n):
-    #        assert y0i[i, j] == y[0, i + 1], (i, j)
 
     y0j = y[np.mgrid[0:n+1, 0:n+1]][0][0, 1:, 1:]
-    #for i in range(n):
-    #    for j in range(n):
-    #        assert y0j[i, j] == y[0, j + 1], (i, j)
 
     b = 2 * (y[1:, 1:] + y[0, 0] - y0i - y0j)
-    #for i in range(n):
-    #    assert abs(b[i, i] - 2 * (fsim[i + 1] + fsim[0] - 2 * y[0, i + 1])) < 1e-12
-    #    for j in range(n):
-    #        if i == j:
-    #            continue
-    #        assert abs(b[i, j] - 2 * (y[i + 1, j + 1] + fsim[0] - y[0, i + 1] -
-    #            y[0, j + 1])) < 1e-12
 
     q = (sim - sim[0])[1:].T
-    #for i in range(n):
-    #    assert np.array_equal(q[:, i], sim[i + 1] - sim[0])
 
     varco = ymin * np.dot(q, np.dot(np.linalg.inv(b), q.T))
     return np.sqrt(np.diag(varco)), varco
@@ -704,8 +715,9 @@ def autoscale(l, rho, a, da, rho_c0, nu0, zeta0, **kwargs):
         res['nu'], res['zeta']]``
 
     res['drho'], res['dnu'], res['dzeta'] : float
-        The respective standard errors derived from fitting the curvature at the
-        minimum, ``res['errors'] == [res['drho'], res['dnu'], res['dzeta']]``.
+        The respective standard errors derived from fitting the curvature at
+        the minimum, ``res['errors'] == [res['drho'], res['dnu'],
+        res['dzeta']]``.
 
     res['errors'], res['varco'] : ndarray
         The standard errors as a vector, and the full variance--covariance

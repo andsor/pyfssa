@@ -21,6 +21,7 @@ import unittest
 
 import fssa
 import numpy as np
+import numpy.ma as ma
 import scipy.optimize
 
 
@@ -79,7 +80,9 @@ class TestScaleData(unittest.TestCase):
         """
 
         # rho should be 1-D array_like
-        self._test_for_1d_array_like(fssa.scaledata, 'rho', self.default_params)
+        self._test_for_1d_array_like(
+            fssa.scaledata, 'rho', self.default_params
+        )
 
     def test_l_1d_array_like(self):
         """
@@ -310,7 +313,7 @@ class TestJPrimes(unittest.TestCase):
         except:
             args = inspect.getargspec(fssa.fssa._jprimes).args
 
-        fields = ['x', 'i']
+        fields = ['x', 'i', 'x_bounds']
 
         for field in fields:
             try:  # python 3
@@ -404,6 +407,115 @@ class TestJPrimes(unittest.TestCase):
                     continue
                 jprime = int(jprime)
                 self.assertGreater(x[iprime, jprime + 1], xij)
+
+    def test_jprimes(self):
+        x = np.array([
+            [0.0, 1.0, 2.0],
+            [0.5, 1.5, 2.5],
+            [-0.25, 0.25, 0.75],
+        ])
+        jprimes = list()
+        jprimes.append(np.array([
+            [np.nan, np.nan, np.nan],
+            [np.nan, 0., 1.],
+            [0., np.nan, np.nan],
+        ]))
+        jprimes.append(np.array([
+            [0., 1., np.nan],
+            [np.nan, np.nan, np.nan],
+            [1., np.nan, np.nan],
+        ]))
+        jprimes.append(np.array([
+            [np.nan, 0., 0.],
+            [np.nan, np.nan, 0.],
+            [np.nan, np.nan, np.nan],
+        ]))
+
+        for i in range(3):
+            ret = fssa.fssa._jprimes(x=x, i=i)
+
+            try:  # python 3
+                with self.subTest(i):
+                    np.testing.assert_allclose(
+                        ret, jprimes[i]
+                    )
+            except AttributeError:  # python 2
+                np.testing.assert_allclose(
+                    ret, jprimes[i]
+                )
+
+    def test_mask(self):
+        x = ma.array([
+            [0.0, 1.0, 2.0],
+            [0.5, 1.5, 2.5],
+            [-0.25, 0.25, 0.75],
+        ])
+        jprimes = list()
+        jprimes.append(np.array([
+            [np.nan, np.nan, np.nan],
+            [np.nan, 0., 1.],
+            [0., np.nan, np.nan],
+        ]))
+        jprimes.append(np.array([
+            [0., 1., np.nan],
+            [np.nan, np.nan, np.nan],
+            [1., np.nan, np.nan],
+        ]))
+        jprimes.append(np.array([
+            [np.nan, 0., 0.],
+            [np.nan, np.nan, 0.],
+            [np.nan, np.nan, np.nan],
+        ]))
+
+        for i in range(3):
+            ret = fssa.fssa._jprimes(x=x, i=i)
+
+            try:  # python 3
+                with self.subTest(i):
+                    np.testing.assert_allclose(
+                        ret, jprimes[i]
+                    )
+            except AttributeError:  # python 2
+                np.testing.assert_allclose(
+                    ret, jprimes[i]
+                )
+
+    def test_xbounds(self):
+        x = np.array([
+            [0.0, 1.0, 2.0],
+            [0.5, 1.5, 2.5],
+            [-0.25, 0.25, 0.75],
+        ])
+
+        jprimes = list()
+        jprimes.append(np.array([
+            [np.nan, np.nan, np.nan],
+            [np.nan, 0., np.nan],
+            [np.nan, np.nan, np.nan],
+        ]))
+        jprimes.append(np.array([
+            [np.nan, 1., np.nan],
+            [np.nan, np.nan, np.nan],
+            [np.nan, np.nan, np.nan],
+        ]))
+        jprimes.append(np.array([
+            [np.nan, np.nan, np.nan],
+            [np.nan, np.nan, 0.],
+            [np.nan, np.nan, np.nan],
+        ]))
+
+        for i in range(3):
+            ret = fssa.fssa._jprimes(x=x, i=i, x_bounds=(0.3, 2.3))
+
+            try:  # python 3
+                with self.subTest(i):
+                    np.testing.assert_allclose(
+                        ret, jprimes[i]
+                    )
+            except AttributeError:  # python 2
+                np.testing.assert_allclose(
+                    ret, jprimes[i]
+                )
 
 
 class TestSelectMask(unittest.TestCase):
@@ -523,7 +635,9 @@ class TestWLSPredict(unittest.TestCase):
         Test wls function signature
         """
         try:
-            args = inspect.signature(fssa.fssa._wls_linearfit_predict).parameters
+            args = inspect.signature(
+                fssa.fssa._wls_linearfit_predict
+            ).parameters
         except:
             args = inspect.getargspec(fssa.fssa._wls_linearfit_predict).args
 
@@ -593,7 +707,7 @@ class TestQuality(unittest.TestCase):
         except:
             args = inspect.getargspec(fssa.quality).args
 
-        fields = ['x', 'y', 'dy']
+        fields = ['x', 'y', 'dy', 'x_bounds']
 
         for field in fields:
             try:  # python 3
@@ -700,8 +814,17 @@ class TestQuality(unittest.TestCase):
         args[param] = np.zeros(shape=(2, 3, 4))
         self.assertRaises(ValueError, callable, *args)
 
-if __name__ == '__main__':
-    unittest.main()
+    def test_linear_quality(self):
+        x = np.array([
+            [0.0, 1.0, 2.0],
+            [0.5, 1.5, 2.5],
+            [-0.25, 0.25, 0.75],
+        ])
+        y = x
+        dy = 0.05 * np.ones_like(y)
+
+        ret = fssa.quality(x, y, dy)
+        self.assertEqual(ret, 0.0)
 
 
 class TestNelderMeadErrors(unittest.TestCase):
@@ -769,8 +892,8 @@ class TestNelderMeadErrors(unittest.TestCase):
 
     def test_identity_hessian(self):
         """
-        Test function returns correct errors and variance--covariance matrix for
-        identity hessian (curvature)
+        Test function returns correct errors and variance--covariance matrix
+        for identity hessian (curvature)
         """
         errors, varco = fssa.fssa._neldermead_errors(**self.default_args)
         self.assertTrue(np.allclose(errors, np.sqrt(2. * self.ymin)))
@@ -778,8 +901,8 @@ class TestNelderMeadErrors(unittest.TestCase):
 
     def test_ellipsoidal_hessian(self):
         """
-        Test function returns correct errors and variance--covariance matrix for
-        ellipsoidal hessian (curvature)
+        Test function returns correct errors and variance--covariance matrix
+        for ellipsoidal hessian (curvature)
         """
         args = copy.deepcopy(self.default_args)
 
@@ -907,14 +1030,16 @@ class TestAutoscale(unittest.TestCase):
     """
 
     def setUp(self):
-        self.l = [ 10, 100, 1000 ]
+        self.l = [
+            10, 100, 1000
+        ]
         self.rho = np.linspace(0.9, 1.1)
 
         l_mesh, rho_mesh = np.meshgrid(self.l, self.rho, indexing='ij')
         self.x = np.power(l_mesh, 0.5) * (rho_mesh - 1.)
 
         def master_curve(x):
-            return 1. / (1. + np.exp( - x))
+            return 1. / (1. + np.exp(- x))
 
         self.master_curve = master_curve
 
@@ -985,3 +1110,7 @@ class TestAutoscale(unittest.TestCase):
                     self.assertIn(field, res)
             except AttributeError:  # python 2
                 self.assertIn(field, res)
+
+
+if __name__ == '__main__':
+    unittest.main()
