@@ -241,7 +241,7 @@ def _wls_linearfit_predict(x, w, wx, wy, wxx, wxy, select):
     return y, dy2
 
 
-def _jprimes(x, i, xbounds=None):
+def _jprimes(x, i, x_bounds=None):
     """
     Helper function to return the j' indices for the master curve fit
 
@@ -256,7 +256,7 @@ def _jprimes(x, i, xbounds=None):
     i : int
         The row index (finite size index)
 
-    xbounds : 2-tuple, optional
+    x_bounds : 2-tuple, optional
         bounds on x values
 
     Returns
@@ -272,7 +272,7 @@ def _jprimes(x, i, xbounds=None):
     j_primes = - np.ones_like(x)
 
     try:
-        x_masked = ma.masked_outside(x, xbounds[0], xbounds[1])
+        x_masked = ma.masked_outside(x, x_bounds[0], x_bounds[1])
     except (TypeError, IndexError):
         x_masked = ma.asanyarray(x)
 
@@ -404,22 +404,20 @@ def quality(x, y, dy, x_bounds=None):
     master_dy2 = np.zeros_like(dy)
     master_dy2[:] = np.nan
 
-    # FIXME apply mask on x
-    if x_bounds is not None:
-        x = ma.masked_outside(x, x_bounds[0], x_bounds[1])
-
     # loop through system sizes
     for i in range(k):
 
-        j_primes = _jprimes(x=x, i=i)
+        j_primes = _jprimes(x=x, i=i, x_bounds=x_bounds)
 
         # loop through x values
         for j in range(n):
 
             # discard x value if it is out of bounds
-            if x_bounds is not None:
-                if not x_bounds[0] <= x[i, j] <= x_bounds[1]:
+            try:
+                if not x_bounds[0] <= x[i][j] <= x_bounds[1]:
                     continue
+            except:
+                pass
 
             # boolean mask for selected data x_l, y_l, dy_l
             select = _select_mask(j=j, j_primes=j_primes)
@@ -434,7 +432,13 @@ def quality(x, y, dy, x_bounds=None):
                 x=x[i, j], w=w, wx=wx, wy=wy, wxx=wxx, wxy=wxy, select=select
             )
 
-    return np.nanmean((y - master_y) ** 2 / (dy ** 2 + master_dy2))
+    # average within finite system sizes first
+    return np.nanmean(
+        np.nanmean(
+            (y - master_y) ** 2 / (dy ** 2 + master_dy2),
+            axis=1
+        )
+    )
 
 
 def _neldermead_errors(sim, fsim, fun):
