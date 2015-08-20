@@ -6,6 +6,9 @@ Welcome to pyfssa!
 
    .. include:: about-include.rst
 
+Table of Contents
+-----------------
+
 .. toctree::
    :maxdepth: 2
 
@@ -14,6 +17,6 @@ Welcome to pyfssa!
    Tutorial <tutorial>
    User Guide <user>
    Developer Guide <developer>
-   reference
+   Reference <reference/fssa>
    zbib
 
