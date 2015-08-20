@@ -1,4 +1,3 @@
--r requirements.txt
 nbconvert
 releases
 sphinx>=1.3
