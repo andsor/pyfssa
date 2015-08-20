@@ -79,8 +79,8 @@ References
 __ https://github.com/andsor/pyfssa/issues/2
 """
 from __future__ import absolute_import
-from ._version import get_versions
 
+import pkg_resources
 from .fssa import scaledata, quality, autoscale
-__version__ = get_versions()['version']
-del get_versions
+
+__version__ = pkg_resources.get_distribution(__name__).version
