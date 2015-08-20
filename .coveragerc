@@ -1,8 +1,8 @@
 # .coveragerc to control coverage.py
 [run]
 branch = True
-source = fssa
-omit = */_version.py
+source = fssa 
+omit = */test/*
 
 [report]
 # Regexes for lines to exclude from consideration
