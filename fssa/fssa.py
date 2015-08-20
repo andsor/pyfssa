@@ -276,12 +276,15 @@ def _jprimes(x, i, x_bounds=None):
     except (TypeError, IndexError):
         x_masked = ma.asanyarray(x)
 
+    k, n = x.shape
+
     # indices of lower and upper bounds
     edges = ma.notmasked_edges(x_masked, axis=1)
-    x_lower = edges[0][-1]
-    x_upper = edges[-1][-1]
+    x_lower = np.zeros(k, dtype=int)
+    x_upper = np.zeros(k, dtype=int)
+    x_lower[edges[0][0]] = edges[0][-1]
+    x_upper[edges[-1][0]] = edges[-1][-1]
 
-    k, n = x.shape
     for i_prime in range(k):
         if i_prime == i:
             j_primes[i_prime][:] = np.nan
@@ -578,7 +581,7 @@ def _minimize_neldermead_witherrors(
     if retall:
         allvecs = [sim[0]]
     fsim[0] = func(x0)
-    nonzdelt = 0.05
+    nonzdelt = 0.01
     zdelt = 0.00025
     for k in range(0, N):
         y = np.array(x0, copy=True)
