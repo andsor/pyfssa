@@ -108,5 +108,5 @@ Routines
 .. autosummary::
    :nosignatures:
 
-   fssa.fss.quality
+   fssa.fssa.quality
 
