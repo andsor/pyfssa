@@ -15,5 +15,4 @@ About pyfssa
    .. toctree::
       :maxdepth: 2
 
-      changelog
-      releases
+      Changelog <changelog>
