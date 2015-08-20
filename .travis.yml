@@ -1,0 +1,49 @@
+language: python
+python:
+- '2.7'
+- '3.4'
+before_install:
+- if [ ${TRAVIS_PYTHON_VERSION:0:1} == "2" ]; then wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh
+  -O miniconda.sh; else wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+  -O miniconda.sh; fi
+- chmod +x miniconda.sh
+- bash miniconda.sh -b -p $HOME/miniconda
+- export PATH=/home/travis/miniconda/bin:$PATH
+- conda update --yes conda
+- conda create -n testenv --yes --file requirements-conda.txt python=$TRAVIS_PYTHON_VERSION
+- source activate testenv
+- conda install --yes pytest
+- pip install -r requirements.txt
+- pip install -r requirements-test.txt
+- pip install coveralls
+- echo $PATH
+- which python
+- which pip
+- which py.test
+- python --version
+- conda info
+- conda list
+install:
+- python setup.py install
+script:
+- py.test
+after_success:
+- if [[ $TRAVIS_PYTHON_VERSION == "3.4" ]]; then coveralls; fi
+deploy:
+- provider: pypi
+  user: andsor
+  password:
+    secure: VbGhiW+x1y+NF2kctOqfZKM2zHgUR1qCFbkhrP++7XVq4AU1aZHDqVze4r0pHsEerMZjWRFjThG0SBTvxog+87xsjVwIwUF6x+P3BmYhukOW/KMz9hdeaqM88cVyEEAnJooUSBljKGp21wZxeVmkc5H1vcUzGsqKwYEIUKInfLKHv+phwsa7H57aOVJlBrXW8cevx8rYccZ9T6DPSh/pDNSW/pdmL8M6t0DWJUF/GKKYhfQevIcsnHuRf45Valuzykk82P8ewL98RQtEH8Motb5iJOd8XV5/t0pQpAA+XyZKx0QCXVNll5xkpAVJ13fgg87Dg5PlHhD47d6xVBLHUyuAc2Wbe2atldBammYqiUo3KLcPG4M8s679uSmG7d239P55Pn4pY2wAIsepug4NvPIgqDQ1dUh9dp0IfloWLTq75K6GaEqZHdGu8T3QBbA0jfjOaBjHuGHqdbKGWLMNaKdLKgZfm7fUDl+jYs8MzELq45I9YlhNmnmGqY2urLg9HgLU+7BGk6TiDBO7v5Mm34r1GWK8TV3QWvg5eB2GuVCLiJnsvgXbxxUqctYHpPdSmfAkYVV49ECN8q7zP/BCRfAeSNZlBN88RaEKpddlZ8TflSZ7FGGgtDGBk8i72T3R3sWT24T8kSFm5agAoJSsMcRZReXwWA4x9Vgf93j8/iU=
+  distributions: sdist bdist_wheel
+  on:
+    tags: true
+    repo: andsor/pyfssa
+    python: 3.4
+    branch: master
+- provider: releases
+  api_key:
+    secure: gTX7WflHB56iH/qzwfzCStmV9COpf5AyhtWOAX+offbKLxXm05Ssvl7DpRFVnY93m8QHToMD40eWyDMuSLJ2wN7CM4eUUZAWcPrQ9Nyx40FzJ4S1scF2cCYVKdfhypHc8X9u7WXGKG+bHtu5z8L85lVVt2OPU2wPArifJ4U0emrYeFMzR5KHeNWrd/3BCmtMm27qqczIBFpNqEXSGPNdi+A4Xnq1VgQzLp+gdp47rzBot7K3tRWq9PhvvfEs3MLJgUTLMV/q+S8Mz+/kMq2VnpIfVsuhuybOImCNUHBCP1h56QnE+25cQmSjQrqeDuO1i1J/KNckvgLyUb/qDHdtiqKg1H+BNm94xWkbHz0mVYjd58MeCFH59G3c1wJNU5mmRzjs4d4Zd0KQ/vgj/oEoCPDQww/6moWH2JgWXMGxpg94tPYiNgGWbayHf5aNR61Vlgs+KRyjOxk2P8fdOvfxFUVbY5b34lVIDCbTQ0LTiY6/LuTMyxfAHu3YadpX+LvOxInYoJJVhEcZyWtvasWNFOQQjUM2a/FOjsPTrNGmByvbTN8m78CEe41K6AIdPlFtaFlf1ZsoSsXiDM+j/OGBk42Gge5sxjkW4aq7xurjT1IM3sG+3z9zc7sm9ynVbl/IgqupSBkU+VuSqkC60gUF86BCDC5Se6es4dXZT9q9avY=
+  on:
+    tags: true
+    python: 3.4
+    branch: master
