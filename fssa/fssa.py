@@ -482,8 +482,8 @@ def _neldermead_errors(sim, fsim, fun):
 
     # the vertices and the midpoints x_ij
     x = 0.5 * (
-        sim[np.mgrid[0:n+1, 0:n+1]][1]
-        + sim[np.mgrid[0:n+1, 0:n+1]][0]
+        sim[np.mgrid[0:n + 1, 0:n + 1]][1] +
+        sim[np.mgrid[0:n + 1, 0:n + 1]][0]
     )
 
     y = np.nan * np.ones(shape=(n + 1, n + 1))
@@ -492,9 +492,9 @@ def _neldermead_errors(sim, fsim, fun):
         for j in range(i + 1, n + 1):
             y[i, j] = y[j, i] = fun(x[i, j])
 
-    y0i = y[np.mgrid[0:n+1, 0:n+1]][0][1:, 1:, 0]
+    y0i = y[np.mgrid[0:n + 1, 0:n + 1]][0][1:, 1:, 0]
 
-    y0j = y[np.mgrid[0:n+1, 0:n+1]][0][0, 1:, 1:]
+    y0j = y[np.mgrid[0:n + 1, 0:n + 1]][0][0, 1:, 1:]
 
     b = 2 * (y[1:, 1:] + y[0, 0] - y0i - y0j)
 
@@ -586,7 +586,7 @@ def _minimize_neldermead_witherrors(
     for k in range(0, N):
         y = np.array(x0, copy=True)
         if y[k] != 0:
-            y[k] = (1 + nonzdelt)*y[k]
+            y[k] = (1 + nonzdelt) * y[k]
         else:
             y[k] = zdelt
 
@@ -787,30 +787,7 @@ def autoscale(l, rho, a, da, rho_c0, nu0, zeta0, x_bounds=None, **kwargs):
     >>> da = dy
     >>>
     >>> # run autoscale
-    >>> fssa.autoscale(l=l, rho=rho, a=a, da=da, rho_c0=0.9, nu0=2.0, zeta0=0.0)
-    varco: array([[  3.48404128e-06,   5.72603874e-05,  -2.26338928e-06],
-        [  5.72603874e-05,   2.10915133e-02,  -1.28212500e-04],
-        [ -2.26338928e-06,  -1.28212500e-04,   1.88163502e-06]])
-    dzeta: 0.0013717270192608684
-    fun: 2.2095309418677989
-    zeta: -0.00035713114892812982
-    drho: 0.0018665586740112224
-    fsim: array([ 2.20953094,  2.20953226,  2.20953272,  2.20953504])
-    dnu: 0.14522917505380872
-    rho: 0.9999052186821713
-    nu: 2.0366578589015862
-    status: 0
-    nit: 69
-    success: True
-    sim: array([[  9.99905219e-01,   2.03665786e+00,  -3.57131149e-04],
-        [  9.99905097e-01,   2.03658480e+00,  -3.56730933e-04],
-        [  9.99905351e-01,   2.03671238e+00,  -3.57425026e-04],
-        [  9.99905303e-01,   2.03665797e+00,  -3.57164729e-04]])
-    x: array([  9.99905219e-01,   2.03665786e+00,  -3.57131149e-04])
-    message: 'Optimization terminated successfully.'
-    errors: array([ 0.00186656,  0.14522918,  0.00137173])
-    nfev: 153
-
+    >>> res = fssa.autoscale(l=l, rho=rho, a=a, da=da, rho_c0=0.9, nu0=2.0, zeta0=0.0)
     """
 
     def goal_function(x):
