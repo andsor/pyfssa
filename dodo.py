@@ -1,7 +1,5 @@
 # coding: utf8
 
-import os
-
 DOIT_CONFIG = {'default_tasks': []}
 
 CITEULIKE_GROUP = 19073
@@ -18,17 +16,4 @@ def task_download_bib():
             ])],
         # 'file_dep': [CITEULIKE_COOKIES],
         'targets': [BIBFILE],
-    }
-
-
-def task_upload_doc():
-    """Upload built html documentation to GitHub pages"""
-
-    return {
-        'actions': [[
-            'ghp-import',
-            '-n',  # Include a .nojekyll file in the branch.
-            '-p',  # Push the branch to origin/{branch} after committing.
-            os.path.join('docs', '_build', 'html')
-        ]],
     }
