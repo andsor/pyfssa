@@ -1,6 +1,9 @@
 **pyfssa** is a scientific Python package for algorithmic finite-size
 scaling analysis at phase transitions.
 
+It stands on the shoulder of the `autoScale.py`_ program.
+Please credit his author *Oliver Melchert* accordingly.
+
 |today| (Version |release|)
 
 Andreas Sorge <pyfssa@asorge.de>
@@ -8,22 +11,23 @@ Andreas Sorge <pyfssa@asorge.de>
 - `Max Planck Institute for Dynamics & Self-Organization <http://www.ds.mpg.de/en>`_, Göttingen, Germany
 - Organization for Research on Complex Adaptive Systems, Göttingen, Germany
 
-.. only:: not latex
+Citation
+--------
 
-   .. image:: https://zenodo.org/badge/6089/andsor/pyfssa.svg
-      :target: http://dx.doi.org/10.5281/zenodo.17581
+Please cite as: Andreas Sorge. (2015). pyfssa |release|. Zenodo. |DOI| 
 
-Please cite the pyfssa package as: Andreas Sorge. (2015). pyfssa v0.2.
-Zenodo. 10.5281/zenodo.17581 (`BibTEX
-<https://zenodo.org/record/17581/export/hx>`_)
+Please also cite `autoScale.py`_.
 
-.. image:: _static/cc-by.*
+Documentation license
+---------------------
 
-This documentation is licensed under a `Creative Commons Attribution 4.0 International License`_.
+|CC| This documentation is licensed under a `Creative Commons Attribution 4.0 International License`_.
 
 .. _Creative Commons Attribution 4.0 International License: http://creativecommons.org/licenses/by/4.0/
 
-.. _Development: http://github.com/andsor/pyfssa
-.. _Package (Download): http://pypi.python.org/pypi/fssa 
-.. _Issues: http://github.com/andsor/pyfssa/issues
-.. _Bibliography: http://www.citeulike.org/group/19073
+.. _autoScale.py: http://arxiv.org/abs/0910.5403
+
+.. |DOI| image:: https://zenodo.org/badge/6089/andsor/pyfssa.svg
+         :target: https://zenodo.org/badge/latestdoi/6089/andsor/pyfssa
+
+.. |CC| image:: _static/cc-by.*
