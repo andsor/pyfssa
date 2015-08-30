@@ -126,12 +126,12 @@ Routines
 .. autosummary::
    :nosignatures:
 
-   fssa.fss.scaledata
+   fssa.fssa.scaledata
 
 Classes
 ~~~~~~~
 
 .. autosummary::
 
-   fssa.fss.ScaledData
+   fssa.fssa.ScaledData
 
