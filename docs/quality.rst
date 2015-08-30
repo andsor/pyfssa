@@ -99,6 +99,30 @@ with error propagation
    \hat{\sigma}_b^2.
 
 
+ 
+Refinement of the quality function
+----------------------------------
+
+The fssa package further refines the quality function.
+The original sum involves only terms for which the master curve is defined.
+As the number of missing terms in general differs from system size to system
+size, the sum implicitly weights system sizes differently.
+This is unintended behavior, especially when it comes to scalings with less
+dense coverage of the critical region at large system sizes.
+
+To alleviate this, we modify the sum as follows:
+
+.. math::
+
+   S' = \frac{1}{k} \sum_i \frac{1}{\mathcal{N}_i} \sum_{j} \frac{(y_{ij} -
+   Y_{ij})^2}{dy_{ij}^2+dY_{ij}^2},
+
+where the number of system sizes is :math:`k` (as before), and
+:math:`\mathcal{N}_i` is the number of terms for the :math:`i`-th system size.
+By separately averaging over all available terms for each system size, and then
+averaging over all system sizes, the contributions of each system size have
+equal weight in the final sum.
+
 Implementation in the fssa package
 ----------------------------------
 
