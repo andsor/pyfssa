@@ -8,8 +8,6 @@ import unittest
 import fssa
 import numpy as np
 import numpy.ma as ma
-import pytest
-import scipy.optimize
 
 
 class TestScaleData(unittest.TestCase):
@@ -958,108 +956,6 @@ class TestNelderMeadErrors(unittest.TestCase):
             (np.ones((self.n, self.n)) - np.eye(self.n)) * 2. * self.ymin *
             2. / 3.
         ))
-
-
-class TestNelderMead(unittest.TestCase):
-    """
-    Test the Nealder Mead with errors implementation
-    """
-
-    def setUp(self):
-        pass
-
-    def tearDown(self):
-        pass
-
-    def test_call(self):
-        """
-        Test function call
-        """
-        self.assertTrue(
-            hasattr(fssa.fssa, '_minimize_neldermead_witherrors'),
-            msg='No such function: fssa.fssa._minimize_neldermead_witherrors'
-        )
-
-    def test_signature(self):
-        """
-        Test function signature
-        """
-        try:
-            args = inspect.signature(
-                fssa.fssa._minimize_neldermead_witherrors
-            ).parameters
-        except:
-            args = inspect.getargspec(
-                fssa.fssa._minimize_neldermead_witherrors
-            ).args
-
-        fields = ['fun', 'x0', 'args', 'callback', 'xtol', 'ftol', 'maxiter',
-                  'maxfev', 'disp', 'return_all', 'with_errors'
-                  ]
-
-        for field in fields:
-            try:  # python 3
-                with self.subTest(i=field):
-                    self.assertIn(field, args)
-            except AttributeError:  # python 2
-                self.assertIn(field, args)
-
-    @pytest.mark.xfail
-    def test_exact_results_as_original_method(self):
-        """
-        Test that the modified method returns exactly the same results as the
-        original method (except for the additional errors)
-        """
-        x0 = [1.3, 0.7, 0.8, 1.9, 1.2]
-        res_original = scipy.optimize.minimize(
-            scipy.optimize.rosen, x0, method='Nelder-Mead'
-        )
-
-        res_witherrors = scipy.optimize.minimize(
-            scipy.optimize.rosen,
-            x0,
-            method=fssa.fssa._minimize_neldermead_witherrors
-        )
-
-        fields = ['fun', 'status', 'success', 'message']
-        for field in fields:
-            try:  # python 3
-                with self.subTest(i=field):
-                    self.assertEqual(
-                        res_original[field],
-                        res_witherrors[field]
-                    )
-            except AttributeError:  # python 2
-                self.assertEqual(
-                    res_original[field],
-                    res_witherrors[field]
-                )
-
-        self.assertTrue(np.all(
-            res_original['x'] == res_witherrors['x']
-        ))
-
-    def test_returns_errors(self):
-        """
-        Test that the modified method returns the errors and
-        variance--covariance matrix
-        """
-        x0 = [1.3, 0.7, 0.8, 1.9, 1.2]
-
-        res = scipy.optimize.minimize(
-            scipy.optimize.rosen,
-            x0,
-            method=fssa.fssa._minimize_neldermead_witherrors
-        )
-
-        errors, varco = fssa.fssa._neldermead_errors(
-            sim=res['sim'],
-            fsim=res['fsim'],
-            fun=scipy.optimize.rosen
-        )
-
-        self.assertTrue(np.all(res['errors'] == errors))
-        self.assertTrue(np.all(res['varco'] == varco))
 
 
 class TestAutoscale(unittest.TestCase):
