@@ -37,6 +37,7 @@ References
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
+import warnings
 from builtins import *
 from collections import namedtuple
 
@@ -166,7 +167,7 @@ def scaledata(l, rho, a, da, rho_c, nu, zeta):
 
     # rho_c should be in range
     if rho_c > rho.max() or rho_c < rho.min():
-        raise ValueError("rho_c is out of range")
+        warnings.warn("rho_c is out of range", RuntimeWarning)
 
     # nu should be float
     nu = float(nu)

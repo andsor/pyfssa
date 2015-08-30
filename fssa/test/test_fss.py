@@ -4,6 +4,7 @@
 import copy
 import inspect
 import unittest
+import warnings
 
 import fssa
 import numpy as np
@@ -139,12 +140,17 @@ class TestScaleData(unittest.TestCase):
 
     def test_rho_c_in_range(self):
         """
-        Test that function raises ValueError when rho_c is out of range
+        Test that function issues warning when rho_c is out of range
         """
 
         args = copy.deepcopy(self.default_params)
         args['rho_c'] = args['rho'].max() + 1.
-        self.assertRaises(ValueError, fssa.scaledata, **args)
+        with warnings.catch_warnings(record=True) as w:
+            warnings.simplefilter('always')
+            fssa.scaledata(**args)
+            assert len(w) == 1
+            assert issubclass(w[-1].category, RuntimeWarning)
+            assert "out of range" in str(w[-1].message)
 
     def test_nu_float(self):
         """
