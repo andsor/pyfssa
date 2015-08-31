@@ -1,6 +1,10 @@
 Changelog
 =========
 
+* :release:`0.5.0 <2015-08-31>`
+* :feature:`19` Move exception for non-positive errors from scaledata into
+  quality
+
 * :release:`0.4.0 <2015-08-30>`
 * :feature:`15` scaledata issues only warning instead of exception when rho_c
   is out of range

@@ -116,8 +116,7 @@ def scaledata(l, rho, a, da, rho_c, nu, zeta):
     ValueError
        If `l` or `rho` is not 1-D array_like, if `a` or `da` is not 2-D
        array_like, if the shape of `a` or `da` differs from ``(l.size,
-       rho.size)``, if `da` has non-positive entries, or if `rho_c` is out of
-       range
+       rho.size)``
 
     References
     ----------
@@ -157,10 +156,6 @@ def scaledata(l, rho, a, da, rho_c, nu, zeta):
     # da should have shape (l.size, rho.size)
     if da.shape != (l.size, rho.size):
         raise ValueError("da should have shape (l.size, rho.size)")
-
-    # da should have only positive entries
-    if not np.all(da > 0.0):
-        raise ValueError("da should have only positive values")
 
     # rho_c should be float
     rho_c = float(rho_c)
@@ -353,7 +348,8 @@ def quality(x, y, dy, x_bounds=None):
     ------
     ValueError
         if not all arrays `x`, `y`, `dy` have dimension 2, or if not all arrays
-        are of the same shape, or if `x` is not sorted along rows (``axis=1``)
+        are of the same shape, or if `x` is not sorted along rows (``axis=1``),
+        or if `dy` does not have only positive entries
 
     Notes
     -----
@@ -390,6 +386,10 @@ def quality(x, y, dy, x_bounds=None):
     # x should be sorted for all system sizes l
     if not np.array_equal(x, np.sort(x, axis=1)):
         raise ValueError("x should be sorted for each system size")
+
+    # dy should have only positive entries
+    if not np.all(dy > 0.0):
+        raise ValueError("dy should have only positive values")
 
     # first dimension: system sizes l
     # second dimension: parameter values rho

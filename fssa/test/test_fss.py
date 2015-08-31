@@ -116,19 +116,19 @@ class TestScaleData(unittest.TestCase):
         args['da'] = np.ones(shape=(3, args['rho'].size - 1))
         self.assertRaises(ValueError, fssa.scaledata, **args)
 
-    def test_da_all_positive(self):
+    def test_no_error_if_not_da_all_positive(self):
         """
-        Test that function raises ValueError if any da is not positive
+        Test that function does not raise ValueError if any da is not positive
         """
 
         # da should have only positive entries
         args = copy.deepcopy(self.default_params)
         args['da'][1, 1] = 0.
-        self.assertRaises(ValueError, fssa.scaledata, **args)
+        fssa.scaledata(**args)
 
         args = copy.deepcopy(self.default_params)
         args['da'][1, 0] = -1.
-        self.assertRaises(ValueError, fssa.scaledata, **args)
+        fssa.scaledata(**args)
 
     def test_rho_c_float(self):
         """
@@ -751,6 +751,22 @@ class TestQuality(unittest.TestCase):
         # manipulate x at some dimension
         args[0][1, 3] = args[0][1, 1]
 
+        self.assertRaises(ValueError, fssa.quality, *args)
+
+    def test_dy_all_positive(self):
+        """
+        Test that function raises ValueError if any dy is not positive
+        """
+        orig_args = list(self.scaled_data)
+
+        # dy should have only positive entries
+        args = copy.deepcopy(orig_args)
+        args[2][1, 1] = 0.
+        self.assertRaises(ValueError, fssa.quality, *args)
+
+        args = copy.deepcopy(orig_args)
+        assert args[2][1, 1] != 0
+        args[2][1, 0] = -1.
         self.assertRaises(ValueError, fssa.quality, *args)
 
     def test_zero_quality(self):
