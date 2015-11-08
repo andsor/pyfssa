@@ -1,5 +1,5 @@
 -r requirements-doc.txt
 -r requirements-test.txt
 -r requirements.txt
-ipython[notebook]
+jupyter
 pre-commit
