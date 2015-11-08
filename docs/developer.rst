@@ -21,6 +21,10 @@ To set up a **Python 3.4** environment in ``.devenv34``, run::
 
     $ tox -e devenv34
 
+To set up a **Python 3.5** environment in ``.devenv35``, run::
+
+    $ tox -e devenv35
+
 Add `requirements`_ for the development environments to the
 `requirements-dev.txt <requirements-dev.txt>`_ file.
 
@@ -112,6 +116,10 @@ Run ::
 or::
 
     $ tox -e py34
+
+or::
+
+    $ tox -e py35
 
 to run all unittests defined in the subfolder ``test`` with the help of `tox`_
 and `py.test`_.
