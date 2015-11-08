@@ -1,6 +1,9 @@
 Changelog
 =========
 
+* :release:`0.6.0 <2015-11-08>`
+* :feature:`0` Add Python 3.5 support
+
 * :release:`0.5.0 <2015-08-31>`
 * :feature:`19` Move exception for non-positive errors from scaledata into
   quality
