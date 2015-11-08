@@ -16,7 +16,7 @@ from scipy.optimize.optimize import (OptimizeResult, _check_unknown_options,
 
 def _minimize_neldermead(func, x0, args=(), callback=None,
                          xtol=1e-4, ftol=1e-4, maxiter=None, maxfev=None,
-                         disp=False, return_all=False, return_simplex=False,
+                         disp=False, return_all=False,
                          **unknown_options):
     """
     Minimization of scalar function of one or more variables using the
@@ -34,9 +34,6 @@ def _minimize_neldermead(func, x0, args=(), callback=None,
         Maximum number of iterations to perform.
     maxfev : int
         Maximum number of function evaluations to make.
-    return_simplex : bool
-        Set to True to return all nodes of final simplex and their function
-        values.
 
     """
     _check_unknown_options(unknown_options)
@@ -167,10 +164,7 @@ def _minimize_neldermead(func, x0, args=(), callback=None,
 
     result = OptimizeResult(fun=fval, nit=iterations, nfev=fcalls[0],
                             status=warnflag, success=(warnflag == 0),
-                            message=msg, x=x)
+                            message=msg, x=x, final_simplex=(sim, fsim))
     if retall:
         result['allvecs'] = allvecs
-    if return_simplex:
-        result['sim'] = sim
-        result['fsim'] = fsim
     return result
