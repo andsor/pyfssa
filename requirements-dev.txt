@@ -2,4 +2,6 @@
 -r requirements-test.txt
 -r requirements.txt
 jupyter
+matplotlib>=1.5
 pre-commit
+seaborn
