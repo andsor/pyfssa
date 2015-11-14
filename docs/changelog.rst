@@ -1,6 +1,9 @@
 Changelog
 =========
 
+* :release:`0.6.1 <2015-11-14>`
+  :bug:`0` Synchronize SciPy 0.17 interface, omit optimization warning
+
 * :release:`0.6.0 <2015-11-08>`
 * :feature:`0` Add Python 3.5 support
 

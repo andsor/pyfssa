@@ -10,7 +10,7 @@ from __future__ import absolute_import, division, print_function
 
 import numpy
 from numpy import asfarray
-from scipy.optimize.optimize import (OptimizeResult, _check_unknown_options,
+from scipy.optimize.optimize import (OptimizeResult,
                                      _status_message, wrap_function)
 
 
@@ -36,7 +36,7 @@ def _minimize_neldermead(func, x0, args=(), callback=None,
         Maximum number of function evaluations to make.
 
     """
-    _check_unknown_options(unknown_options)
+    # _check_unknown_options(unknown_options)
     maxfun = maxfev
     retall = return_all
 
