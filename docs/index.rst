@@ -16,6 +16,7 @@ Table of Contents
    Setup <setup>
    Tutorial <tutorial>
    User Guide <user>
+   Verification <verification>
    Developer Guide <developer>
    Reference <reference/fssa>
    zbib
