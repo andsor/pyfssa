@@ -1,6 +1,9 @@
 Changelog
 =========
 
+* :release:`0.7.3 <2015-11-21>`
+* :bug:`0` Fix documentation
+
 * :release:`0.7.1 <2015-11-21>`
 * :bug:`0` Fix Travis
 
