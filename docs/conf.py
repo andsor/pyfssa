@@ -58,9 +58,9 @@ apidoc.main(cmd_line.split(" "))
 
 # convert tutorial to rst
 IPYTHON = (
-    'ipython' if not on_rtd
+    'jupyter' if not on_rtd
     else
-    '/home/docs/checkouts/readthedocs.org/user_builds/pyfssa/envs/latest/bin/ipython3'
+    '/home/docs/checkouts/readthedocs.org/user_builds/pyfssa/envs/latest/bin/jupyter'
 )
 
 subprocess.call(
@@ -69,12 +69,6 @@ subprocess.call(
 )
 
 # convert verification study to rst
-IPYTHON = (
-    'ipython' if not on_rtd
-    else
-    '/home/docs/checkouts/readthedocs.org/user_builds/pyfssa/envs/latest/bin/ipython3'
-)
-
 subprocess.call(
     "{} nbconvert --to rst --template _static/rst.tpl verification.ipynb".format(IPYTHON),
     shell=True
