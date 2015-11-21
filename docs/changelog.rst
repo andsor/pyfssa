@@ -1,6 +1,9 @@
 Changelog
 =========
 
+* :release:`0.7.1 <2015-11-21>`
+* :bug:`0` Fix Travis
+
 * :release:`0.7.0 <2015-11-21>`
 * :feature:`1` Add verification study
 

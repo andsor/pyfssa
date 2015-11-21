@@ -30,7 +30,8 @@ script:
 - py.test
 after_success:
 - if [[ $TRAVIS_PYTHON_VERSION == "3.5" ]]; then coveralls; fi
-- if [[ $TRAVIS_PYTHON_VERSION == "3.5" ]]; then rvm install 2.0.0; fi
+before_deploy:
+- gem install mime-types -v 2.6.2
 deploy:
 - provider: pypi
   user: andsor
