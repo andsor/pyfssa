@@ -1,6 +1,9 @@
 Changelog
 =========
 
+* :release:`0.7.0 <2015-11-21>`
+* :feature:`1` Add verification study
+
 * :release:`0.6.2 <2015-11-14>`
 * :bug:`0` Fix changelog
 

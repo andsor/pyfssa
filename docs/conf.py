@@ -36,6 +36,7 @@ class Mock(MagicMock):
 MOCK_MODULES = [
     'numpy', 'numpy.ma', 'scipy', 'scipy.stats', 'scipy.optimize',
     'scipy.optimize.optimize', 'matplotlib',
+    'h5py', 'seaborn', 'cycler',
 ]
 sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
@@ -64,6 +65,18 @@ IPYTHON = (
 
 subprocess.call(
     "{} nbconvert --to rst --template _static/rst.tpl tutorial.ipynb".format(IPYTHON),
+    shell=True
+)
+
+# convert verification study to rst
+IPYTHON = (
+    'ipython' if not on_rtd
+    else
+    '/home/docs/checkouts/readthedocs.org/user_builds/pyfssa/envs/latest/bin/ipython3'
+)
+
+subprocess.call(
+    "{} nbconvert --to rst --template _static/rst.tpl verification.ipynb".format(IPYTHON),
     shell=True
 )
 

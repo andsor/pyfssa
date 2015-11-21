@@ -1,6 +1,7 @@
 -r requirements-doc.txt
 -r requirements-test.txt
 -r requirements.txt
+h5py
 jupyter
 matplotlib>=1.5
 pre-commit
