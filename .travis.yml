@@ -30,6 +30,7 @@ script:
 - py.test
 after_success:
 - if [[ $TRAVIS_PYTHON_VERSION == "3.5" ]]; then coveralls; fi
+- if [[ $TRAVIS_PYTHON_VERSION == "3.5" ]]; then rvm install 2.0.0; fi
 deploy:
 - provider: pypi
   user: andsor
