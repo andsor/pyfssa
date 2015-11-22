@@ -1,6 +1,9 @@
 Changelog
 =========
 
+* :release:`0.7.4 <2015-11-22>`
+* :bug:`0` Add section on simulation design to verification study
+
 * :release:`0.7.3 <2015-11-21>`
 * :bug:`0` Fix documentation
 
