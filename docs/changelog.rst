@@ -1,6 +1,7 @@
 Changelog
 =========
 
+* :release:`0.7.6 <2015-12-12>`
 * :bug:`0` Fix Readthedocs notebook conversion
 
 * :release:`0.7.5 <2015-12-12>`
