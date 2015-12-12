@@ -57,11 +57,7 @@ cmd_line = cmd_line_template.format(outputdir=output_dir, moduledir=module_dir)
 apidoc.main(cmd_line.split(" "))
 
 # convert tutorial to rst
-IPYTHON = (
-    'jupyter' if not on_rtd
-    else
-    '/home/docs/checkouts/readthedocs.org/user_builds/pyfssa/envs/latest/bin/jupyter'
-)
+IPYTHON = 'jupyter'
 
 subprocess.call(
     "{} nbconvert --to rst --template _static/rst.tpl tutorial.ipynb".format(IPYTHON),
