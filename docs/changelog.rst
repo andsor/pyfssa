@@ -1,6 +1,9 @@
 Changelog
 =========
 
+* :release:`0.7.5 <2015-12-12>`
+* :bug:`0` Refactor verification study plots
+
 * :release:`0.7.4 <2015-11-22>`
 * :bug:`0` Add section on simulation design to verification study
 
